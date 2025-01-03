@@ -1,7 +1,6 @@
 export default function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     const date = new Date(label + "-01");
-    const isMobile = false;
 
     return (
       <div className="bg-white p-2 sm:p-4 border border-gray-200 shadow-lg rounded-lg max-w-[200px] sm:max-w-none">

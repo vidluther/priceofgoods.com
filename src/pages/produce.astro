@@ -34,7 +34,7 @@ const description = "Live tracking of meat prices in the United States. Monitor 
                 href={`#${item.name.toLowerCase()}`}
                 class="transition hover:scale-105"
             >
-                <PriceCard item={item} loading={false} client:load />
+                <PriceCard item={item} loading={false} error={false} client:load />
             </a>
             ))}
         </div>
