@@ -12,7 +12,7 @@ import CustomTooltip from "./CustomTooltip.jsx";
 
 export default function PriceChart({ data, items }) {
   const [timeRange, setTimeRange] = useState("4y");
-  const item = items[0];
+  // const item = items[0];
 
   const getFilteredData = () => {
     const now = new Date();
