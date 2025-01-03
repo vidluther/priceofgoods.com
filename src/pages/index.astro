@@ -1,11 +1,13 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Welcome from "../components/Welcome.astro";
+import Layout from "../layouts/Layout.astro";
+import HomePage from "../components/react/Homepage";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const title = "Price of Goods - Track Daily Essentials Prices in the USA";
+const description =
+    "Live tracking of essential goods prices in the United States. Monitor costs of eggs, milk, bread, and gas with historical price trends.";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={title} description={description}>
+    <HomePage client:load />
 </Layout>

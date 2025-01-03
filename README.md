@@ -1,48 +1,54 @@
-# Astro Starter Kit: Basics
+# Price Of Goods
 
-```sh
-npm create astro@latest -- --template basics
-```
+This website was made so that I can easily see what the price of certain goods are, and compare them to what they were in the past.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+People love to talk about the price of X or Y these days and how much it's gone up (usually) in the past N years. Most of these are anecdotal and not based on any real data.
+So I wanted to create a website that would allow me to easily see the price of goods over time, and compare them to what they were in the past.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+I'm using the [Bureau of Labor Statistics](https://www.bls.gov/) to get the data for the price of goods. They have a lot of data, and it's all free to use.
+If you want to look something up yourself, I recommend you go here https://data.bls.gov/PDQWeb/ap and look things up yourself. It's a great resource.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Why are you only tracking certain goods?
 
-## 🚀 Project Structure
+Because this is my website, and I can decide what I want to track. I'm tracking goods that I'm interested in, and that I think other people might be interested in as well.
+When I launched this website on January 1st 2025, my wife suggested tracking specific things like meats, and produce, so that's on the todo list.
 
-Inside of your Astro project, you'll see the following folders and files:
+### Roadmap
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- [x] Track goods like, eggs, milk, bread, and gas
+- [x] Track meats like, beef, chicken, bacon etc #1.
+- [x] Track produce like, apples, oranges, bananas etc #2.
+- [ ] Organize/categorize into sub pages
+- [ ] Create a Github issue, or better yet, a PR and help me out!
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+### Technology Stack
 
-## 🧞 Commands
+1. Astro [https://astro.build]
+2. React 19
+3. TailwindCSS
+4. Recharts
+5. Cloudflare Pages (hosting)
+6. Cloudflare Workers (data fetching)
+7. Cloudflare R2 (data storing/caching)
+6. Github (source control)
+7. Zed (code editor)
 
-All commands are run from the root of the project, from a terminal:
+### How it was built
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+I protoyped this site in Replit first, to see if it was possible to get the data I needed. To my amazement, Replit built a prototype using something called Streamlit, and Python in minutes.
+I was quite amazed with what it built, and I probably could have launched it from their platform, but I wanted to have more control over the code, and I wanted to learn React 19, Vite etc.
+Since I work in Javascript/Node world most of the time, I wanted to be able to maintain the website and make enhancements to it in the future. While the $0.25 per checkpoint is a great deal,
+I wanted to have more control over where it's hosted and be able to make changes to it myself.
 
-## 👀 Want to learn more?
+I also think the Replit solution was a bit over engineered for what I needed. I didn't need a backend, or a database, or anything like that. I just needed a way to get the data from the BLS, and display it in a nice way.
+So, I took inspiration from the Replit code, and started building this website using React, Vite, and TailwindCSS.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Claude helped me along the way, especially with the rechart stuff and the data fetching.
+
+I started the process of building this website around 6pm on December 31st 2024, and I launched it around 12am on January 1st 2025.
+
+The hurdles I had were related to caching the data and making sure I didn't run out of API credits.
+I'm using Cloudflare Workers to fetch the data (https://github.com/vidluther/pog-cache) and Cloudflare R2 to store the data. I'm also using Cloudflare Pages to host the website.
+The CF Worker pulls the data once a day, creates a JSON file that I can consume in the website, and uploads it to an R2 bucket, which this website consumes. This way I don't have to hit the BLS API every time someone visits the website.
+
+I think I could probably also make the CF worker run once a month, rather than once a day, since the data doesn't change every day.
