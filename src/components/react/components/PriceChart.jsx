@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import CustomTooltip from "./CustomTooltip";
+import CustomTooltip from "./CustomTooltip.jsx";
 
 export default function PriceChart({ data, items }) {
   const [timeRange, setTimeRange] = useState("4y");
@@ -38,7 +38,6 @@ export default function PriceChart({ data, items }) {
     });
   };
   const filteredData = getFilteredData();
-  console.log(filteredData);
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
