@@ -1,23 +1,9 @@
-// src/config/items.js
-import {
-  Egg,
-  Milk,
-  ShoppingBasket,
-  Fuel,
-  Beef,
-  Drumstick,
-  Coffee,
-  Banana,
-  Citrus,
-  Zap,
-} from "lucide-react";
-
 export const allItems = {
   // Staples
   eggs: {
     name: "Eggs",
     dataKey: "eggs", // matches the key in priceData.current
-    icon: Egg,
+    icon: "🐣",
     unit: "dozen",
     bgColor: "bg-yellow-50",
     lineColor: "#8884d8",
@@ -25,7 +11,7 @@ export const allItems = {
   milk: {
     name: "Milk",
     dataKey: "milk",
-    icon: Milk,
+    icon: "🥛",
     unit: "gallon",
     bgColor: "bg-blue-50",
     lineColor: "#82ca9d",
@@ -33,7 +19,7 @@ export const allItems = {
   bread: {
     name: "Bread",
     dataKey: "bread",
-    icon: ShoppingBasket,
+    icon: "🥖",
     unit: "loaf",
     bgColor: "bg-amber-50",
     lineColor: "#ffc658",
@@ -41,7 +27,7 @@ export const allItems = {
   gas: {
     name: "Gas",
     dataKey: "gas",
-    icon: Fuel,
+    icon: "⛽️",
     unit: "gallon",
     bgColor: "bg-red-50",
     lineColor: "#ff7300",
@@ -51,7 +37,7 @@ export const allItems = {
   bacon: {
     name: "Bacon",
     dataKey: "bacon",
-    icon: Beef,
+    icon: "🥓",
     unit: "pound",
     bgColor: "bg-rose-50",
     lineColor: "#e11d48",
@@ -59,7 +45,7 @@ export const allItems = {
   chicken: {
     name: "Chicken",
     dataKey: "chicken",
-    icon: Drumstick,
+    icon: "🐔",
     unit: "pound",
     bgColor: "bg-orange-50",
     lineColor: "#ea580c",
@@ -69,7 +55,7 @@ export const allItems = {
   bananas: {
     name: "Bananas",
     dataKey: "bananas",
-    icon: Banana,
+    icon: "🍌",
     unit: "pound",
     bgColor: "bg-yellow-50",
     lineColor: "#eab308",
@@ -77,7 +63,7 @@ export const allItems = {
   oranges: {
     name: "Oranges",
     dataKey: "oranges",
-    icon: Citrus,
+    icon: "🍊",
     unit: "pound",
     bgColor: "bg-orange-50",
     lineColor: "#f97316",
@@ -87,7 +73,7 @@ export const allItems = {
   coffee: {
     name: "Coffee",
     dataKey: "coffee",
-    icon: Coffee,
+    icon: "☕️",
     unit: "pound",
     bgColor: "bg-brown-50",
     lineColor: "#92400e",
@@ -95,7 +81,7 @@ export const allItems = {
   electricity: {
     name: "Electricity",
     dataKey: "electricity",
-    icon: Zap,
+    icon: "💡",
     unit: "KWH",
     bgColor: "bg-yellow-50",
     lineColor: "#facc15",
@@ -116,5 +102,36 @@ export function getItemsWithPrices(groupName, priceData) {
   return groupItems.map((itemKey) => ({
     ...allItems[itemKey],
     price: priceData?.current?.[allItems[itemKey].dataKey],
+  }));
+}
+
+export function getMeatItems(priceData) {
+  const meatIds = ["chicken", "bacon"];
+  return meatIds.map((id) => ({
+    ...allItems[id],
+    price: priceData?.current?.[allItems[id].dataKey],
+  }));
+}
+
+export function getAllItems(priceData) {
+  return Object.values(allItems).map((item) => ({
+    ...item,
+    price: priceData?.current?.[item.dataKey],
+  }));
+}
+
+export function getProduceItems(priceData) {
+  const produceIds = ["bananas", "oranges"];
+  return produceIds.map((id) => ({
+    ...allItems[id],
+    price: priceData?.current?.[allItems[id].dataKey],
+  }));
+}
+
+export function getUtilityItems(priceData) {
+  const utilityIds = ["gas", "electricity"];
+  return utilityIds.map((id) => ({
+    ...allItems[id],
+    price: priceData?.current?.[allItems[id].dataKey],
   }));
 }
