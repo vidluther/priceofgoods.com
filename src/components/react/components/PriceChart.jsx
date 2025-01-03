@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import CustomTooltip from "./CustomTooltip";
@@ -38,7 +37,8 @@ export default function PriceChart({ data, items }) {
       return itemDate >= filterDate;
     });
   };
-
+  const filteredData = getFilteredData();
+  console.log(filteredData);
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -55,7 +55,7 @@ export default function PriceChart({ data, items }) {
       <div className="h-96">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={data}
+            data={filteredData}
             margin={{
               top: 5,
               right: 5,

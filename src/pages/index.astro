@@ -34,7 +34,7 @@ const description = "Live tracking of essential goods prices in the United State
                 href={`#${item.name.toLowerCase()}`}
                 class="transition hover:scale-105"
             >
-                <PriceCard item={item} loading={false} client:load />
+                <PriceCard item={item} error={false} loading={false} client:load />
             </a>
             ))}
         </div>
