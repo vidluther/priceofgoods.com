@@ -2,15 +2,17 @@
 interface Props {
   title: string;
   description: string;
-  ogImage?: string; // Optional category for OG image
+  ogImage?: {
+    type: 'categories' | 'items';
+    slug: string;
+  }
 }
 
 const { title, description, ogImage } = Astro.props;
 const siteUrl = 'https://priceofgoods.com';
-
 const fullOgImageUrl = ogImage
-  ? `${siteUrl}/og-images/${ogImage}.png`
-  : `${siteUrl}/og-images/national.png`;
+  ? `${siteUrl}/og-image/${ogImage.type}/${ogImage.slug}.png`
+  : `${siteUrl}/default-og.png`;
 
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
@@ -25,6 +27,7 @@ import Footer from '../components/Footer.astro';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
