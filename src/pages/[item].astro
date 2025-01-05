@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ItemDetailPage from '../components/react/ItemDetailPage';
+import { fetchGoodsConfig } from '../lib/fetchUtils';
+import { slugify } from '../lib/stringUtilities';
+
+// Generate all possible item routes
+export async function getStaticPaths() {
+  const goodsConfig = await fetchGoodsConfig();
+
+  // Collect all items from all categories
+  const allItems = Object.values(goodsConfig.categories).reduce((items, category) => {
+    return {
+      ...items,
+      ...category.items
+    };
+  }, {});
+
+  return Object.values(allItems).map((item) => ({
+    params: { item: slugify(item.name) },
+    props: { itemData: item }
+  }));
+}
+
+const { item } = Astro.params;
+const { itemData } = Astro.props;
+
+const title = `${itemData.name} Price - Current ${itemData.name} Prices and Trends in USA`;
+const description = `Track ${itemData.name.toLowerCase()} prices across different regions in the United States. Compare national and regional prices, view historical trends, and monitor price changes.`;
+---
+
+<Layout title={title} description={description}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <ItemDetailPage item={itemData} client:load />
+  </div>
+</Layout>
