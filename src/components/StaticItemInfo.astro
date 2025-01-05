@@ -1,0 +1,65 @@
+---
+const { item, currentPrice } = Astro.props;
+
+const getChangeColor = (change) => {
+  if (change > 0) return "text-red-600";
+  if (change < 0) return "text-green-600";
+  return "text-gray-600";
+};
+
+const formatChange = (change) => {
+  if (change === null || change === undefined) return "";
+  const prefix = change > 0 ? "+" : "";
+  return `${prefix}${change.toFixed(2)}`;
+};
+---
+
+<div class={`${item.bgColor} rounded-lg shadow-lg overflow-hidden`}>
+  <div class="p-6">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-3xl">{item.icon}</span>
+      <h1 class="text-2xl font-semibold">{item.name}</h1>
+    </div>
+    <div class="flex items-baseline gap-2">
+      <span class="text-4xl font-bold">
+        ${currentPrice.current.toFixed(2)}
+      </span>
+      <span class="text-gray-600">per {item.unit}</span>
+    </div>
+    {currentPrice.percentChange !== null && (
+      <div class="flex items-center gap-2 mt-2">
+        {currentPrice.percentChange > 0 ? (
+          <svg 
+            class="text-red-600 w-5 h-5" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2"
+          >
+            <path d="M23 6L13.5 15.5L8.5 10.5L1 18" />
+            <path d="M17 6H23V12" />
+          </svg>
+        ) : (
+          <svg 
+            class="text-green-600 w-5 h-5" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2"
+          >
+            <path d="M23 18L13.5 8.5L8.5 13.5L1 6" />
+            <path d="M17 18H23V12" />
+          </svg>
+        )}
+        <div class="flex flex-col">
+          <span class={getChangeColor(currentPrice.percentChange)}>
+            ${formatChange(currentPrice.priceChange)} from last month
+          </span>
+          <span class={getChangeColor(currentPrice.percentChange)}>
+            ({formatChange(currentPrice.percentChange)}%)
+          </span>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
