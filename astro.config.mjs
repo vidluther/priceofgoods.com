@@ -9,4 +9,5 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   integrations: [react(), tailwind(), sitemap()],
   site: "https://priceofgoods.com",
+  output: "static",
 });
