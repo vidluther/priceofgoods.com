@@ -18,11 +18,15 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
-const title = `${categoryData.name} Prices - ${categoryData.name} Prices in the USA`;
-const description = `Price of ${categoryData.name.toLowerCase()} in the United States.`;
+const title = `${categoryData.name} Prices - Track ${categoryData.name} Prices in the USA`;
+const description = `Live tracking of ${categoryData.name.toLowerCase()} prices in the United States. Monitor costs and price trends.`;
 ---
 
-<Layout title={title} description={description}>
+<Layout
+  title={title}
+  description={description}
+  ogCategory={category}
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">
