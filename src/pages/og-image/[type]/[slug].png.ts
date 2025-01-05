@@ -16,6 +16,14 @@ export async function getStaticPaths() {
   const goodsConfig = await fetchGoodsConfig();
   const paths = [];
 
+  // Add home page path
+  paths.push({
+    params: {
+      type: "home",
+      slug: "index",
+    },
+  });
+
   // Add category paths
   for (const category of Object.values(goodsConfig.categories)) {
     paths.push({
@@ -37,6 +45,89 @@ export async function getStaticPaths() {
   }
 
   return paths;
+}
+
+async function generateHomeImage(goodsConfig) {
+  try {
+    // Get a highlight item from each category
+    const highlightPromises = Object.values(goodsConfig.categories).map(
+      async (category) => {
+        // Get the first item from each category
+        const item = Object.values(category.items)[0];
+        try {
+          const itemData = await processItemData(item.dataKey);
+          const priceValue = itemData?.currentPrices?.national?.current;
+          const percentChange =
+            itemData?.currentPrices?.national?.percentChange;
+
+          return {
+            category: category.name,
+            item: item.name,
+            price:
+              typeof priceValue === "number" ? priceValue.toFixed(2) : "N/A",
+            change:
+              typeof percentChange === "number"
+                ? percentChange.toFixed(1)
+                : "N/A",
+          };
+        } catch (error) {
+          console.error(`Error processing data for ${item.name}:`, error);
+          return {
+            category: category.name,
+            item: item.name,
+            price: "N/A",
+            change: "N/A",
+          };
+        }
+      },
+    );
+
+    const highlights = await Promise.all(highlightPromises);
+
+    // Create price list with category headers
+    const pricesList = highlights
+      .map((highlight, idx) => {
+        const changeDisplay =
+          highlight.change === "N/A" ? "" : ` (${highlight.change}%)`;
+        const priceDisplay =
+          highlight.price === "N/A"
+            ? "Price unavailable"
+            : `$${highlight.price}`;
+        return `
+          <text x="60" y="${200 + idx * 80}" class="category-name">${highlight.category}</text>
+          <text x="60" y="${230 + idx * 80}" class="price-item">
+            ${highlight.item}: ${priceDisplay}${changeDisplay}
+          </text>
+        `;
+      })
+      .join("");
+
+    return `
+      <svg width="1200" height="600" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap');
+          .title { fill: #000; font-size: 48px; font-weight: bold; font-family: 'Inter', sans-serif; }
+          .subtitle { fill: #666; font-size: 32px; font-family: 'Inter', sans-serif; }
+          .category-name { fill: #4299E1; font-size: 24px; font-weight: bold; font-family: 'Inter', sans-serif; }
+          .price-item { fill: #333; font-size: 28px; font-family: 'Inter', sans-serif; }
+          .site { fill: #4299E1; font-size: 24px; font-family: 'Inter', sans-serif; }
+        </style>
+
+        <rect width="1200" height="600" fill="#ffffff"/>
+        <rect width="1200" height="5" fill="#4299E1" y="0"/>
+
+        <text x="60" y="100" class="title">Price of Goods</text>
+        <text x="60" y="160" class="subtitle">Current prices and trends in the USA</text>
+
+        ${pricesList}
+
+        <text x="60" y="560" class="site">priceofgoods.com</text>
+      </svg>
+    `;
+  } catch (error) {
+    console.error("Error in generateHomeImage:", error);
+    return createErrorSvg(`Unable to load prices overview: ${error.message}`);
+  }
 }
 
 async function generateCategoryImage(category) {
@@ -231,9 +322,11 @@ export const GET: APIRoute = async ({ params }: Props) => {
     }
 
     const goodsConfig = await fetchGoodsConfig();
-    let svg;
+    let svg: string;
 
-    if (type === "categories") {
+    if (type === "home" && slug === "index") {
+      svg = await generateHomeImage(goodsConfig);
+    } else if (type === "categories") {
       const category = Object.values(goodsConfig.categories).find(
         (cat) => slugify(cat.name) === slug,
       );
