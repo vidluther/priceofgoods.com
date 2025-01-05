@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -9,10 +9,36 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import CustomTooltip from "./CustomTooltip.jsx";
+import { fetchItemHistory } from "../../lib/fetchUtils";
 
-export default function PriceChart({ data, items }) {
+export default function PriceChart({ itemKey, item }) {
   const [timeRange, setTimeRange] = useState("4y");
-  // const item = items[0];
+  const [historyData, setHistoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const data = await fetchItemHistory("national", itemKey);
+        // Transform the data for the chart
+        const formattedData = data.map((entry) => ({
+          month: `${entry.year}-${entry.period.substring(1)}`, // Convert M11 to 11
+          [item.name.toLowerCase()]: parseFloat(entry.value),
+        }));
+        // Sort by date
+        formattedData.sort((a, b) => new Date(a.month) - new Date(b.month));
+        setHistoryData(formattedData);
+      } catch (error) {
+        console.error("Error fetching history:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (itemKey) {
+      fetchHistory();
+    }
+  }, [itemKey, item.name]);
 
   const getFilteredData = () => {
     const now = new Date();
@@ -32,12 +58,22 @@ export default function PriceChart({ data, items }) {
         filterDate.setFullYear(now.getFullYear() - 4);
     }
 
-    return data.filter((item) => {
-      const itemDate = new Date(item.month + "-01");
+    return historyData.filter((dataPoint) => {
+      const itemDate = new Date(dataPoint.month + "-01");
       return itemDate >= filterDate;
     });
   };
+
+  if (loading) {
+    return (
+      <div className="h-96 flex items-center justify-center">
+        <p className="text-gray-500">Loading price history...</p>
+      </div>
+    );
+  }
+
   const filteredData = getFilteredData();
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -67,7 +103,6 @@ export default function PriceChart({ data, items }) {
               dataKey="month"
               tickFormatter={(tick) => {
                 const date = new Date(tick + "-01");
-                // Use shorter format on mobile
                 return date.toLocaleDateString(undefined, {
                   month: "short",
                   year: "2-digit",
@@ -75,7 +110,7 @@ export default function PriceChart({ data, items }) {
               }}
               tick={{ fontSize: 12 }}
               angle={0}
-              textAnchor={"middle"}
+              textAnchor="middle"
               height={60}
             />
             <YAxis
@@ -84,18 +119,14 @@ export default function PriceChart({ data, items }) {
               width={60}
             />
             <Tooltip content={<CustomTooltip />} />
-
-            {items.map((item) => (
-              <Line
-                key={item.name.toLowerCase()}
-                type="monotone"
-                dataKey={item.name.toLowerCase()}
-                stroke={item.lineColor}
-                name={item.name}
-                dot={false}
-                strokeWidth={2}
-              />
-            ))}
+            <Line
+              type="monotone"
+              dataKey={item.name.toLowerCase()}
+              stroke={item.lineColor}
+              name={item.name}
+              dot={false}
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
