@@ -2,13 +2,18 @@
 interface Props {
   title: string;
   description: string;
+  ogImage?: string; // Optional category for OG image
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogImage } = Astro.props;
+const siteUrl = 'https://priceofgoods.com';
+
+const fullOgImageUrl = ogImage
+  ? `${siteUrl}/og-images/${ogImage}.png`
+  : `${siteUrl}/og-images/national.png`;
 
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
-
 ---
 
 <!doctype html>
@@ -19,17 +24,28 @@ import Footer from '../components/Footer.astro';
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImageUrl} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImageUrl} />
+
     <title>{title}</title>
   </head>
   <body>
     <nav class="bg-white shadow">
-
-            <Navigation /> <!-- Navigation component -->
-          </div>
+      <Navigation />
     </nav>
 
     <slot />
-    <Footer /> <!-- Footer component -->
+    <Footer />
   </body>
 </html>
