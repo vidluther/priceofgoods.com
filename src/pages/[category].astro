@@ -18,8 +18,8 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
-const title = `${categoryData.name} Prices - Track ${categoryData.name} Prices in the USA`;
-const description = `Live tracking of ${categoryData.name.toLowerCase()} prices in the United States. Monitor costs and price trends.`;
+const title = `${categoryData.name} Prices - ${categoryData.name} Prices in the USA`;
+const description = `Price of ${categoryData.name.toLowerCase()} in the United States.`;
 ---
 
 <Layout title={title} description={description}>
