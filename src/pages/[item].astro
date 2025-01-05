@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ItemDetailPage from '../components/react/ItemDetailPage';
 import { fetchGoodsConfig } from '../lib/fetchUtils';
+import { processItemData, regions } from '../lib/dataUtils';
 import { slugify } from '../lib/stringUtilities';
+import StaticItemInfo from '../components/StaticItemInfo.astro';
+import RegionalComparison from '../components/RegionalComparison.astro';
+import PriceHistoryChart from '../components/react/PriceHistoryChart';
 
 // Generate all possible item routes
 export async function getStaticPaths() {
@@ -16,21 +19,56 @@ export async function getStaticPaths() {
     };
   }, {});
 
-  return Object.values(allItems).map((item) => ({
-    params: { item: slugify(item.name) },
-    props: { itemData: item }
-  }));
+  // Process data for all items at build time
+  const paths = await Promise.all(
+    Object.values(allItems).map(async (item) => {
+      const itemData = await processItemData(item.dataKey);
+      return {
+        params: { item: slugify(item.name) },
+        props: {
+          itemInfo: item,
+          itemData
+        }
+      };
+    })
+  );
+
+  return paths;
 }
 
 const { item } = Astro.params;
-const { itemData } = Astro.props;
+const { itemInfo, itemData } = Astro.props;
 
-const title = `${itemData.name} Price - Current ${itemData.name} Prices and Trends in USA`;
-const description = `Track ${itemData.name.toLowerCase()} prices across different regions in the United States. Compare national and regional prices, view historical trends, and monitor price changes.`;
+const title = `${itemInfo.name} Price - Current ${itemInfo.name} Prices and Trends in USA`;
+const description = `Track ${itemInfo.name.toLowerCase()} prices across different regions in the United States. Compare national and regional prices, view historical trends, and monitor price changes.`;
 ---
 
 <Layout title={title} description={description}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <ItemDetailPage item={itemData} client:load />
+    <!-- Static content rendered at build time -->
+    <StaticItemInfo
+      item={itemInfo}
+      currentPrice={itemData.currentPrices.national}
+    />
+
+    <div class="h-px bg-gray-200 my-8"></div>
+
+    <RegionalComparison
+      item={itemInfo}
+      prices={itemData.currentPrices}
+      regions={regions}
+    />
+
+    <div class="h-px bg-gray-200 my-8"></div>
+
+    <!-- Interactive chart loaded only when needed -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <PriceHistoryChart
+        item={itemInfo}
+        historyData={itemData.history}
+        regions={regions}
+        client:visible
+      />
+    </div>
   </div>
 </Layout>
