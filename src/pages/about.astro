@@ -1,12 +1,74 @@
 ---
 import Layout from "../layouts/Layout.astro";
-const title = "About Price of Goods"
-const description = "Everything you wanted to know about the priceofgoods.com"
+const title = "About Price of Goods - Tracking US Price Changes"
+const description = "Learn about priceofgoods.com, how it started, and the data behind tracking essential goods prices"
 ---
 
 <Layout title={title} description={description}>
-    <h1>About Price of Goods</h1>
-    <p>Welcome to priceofgoods.com! This site is dedicated to tracking the prices of essential goods in the United States. We provide live updates on the costs of eggs, milk, bread, and gas, along with historical price trends. Our goal is to help you make informed decisions about your daily purchases.</p>
-    <p>Our data is sourced from the U.S. Bureau of Labor Statistics and is updated daily. We hope you find our site useful and informative. If you have any questions or feedback, please don't hesitate to reach out to us.</p>
+  <div class="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <article class="prose lg:prose-lg mx-auto">
+      <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl mb-8">About Price of Goods</h1>
 
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">What is This? </h2>
+        <p class="text-gray-600 mb-4">
+        I wanted to see if the price of goods I consume was going up or down.
+        I have a feeling that prices aren't going to go down below Pandemic levels ever again.
+        </p>
+        <p class="text-gray-600 mb-4">
+        But who knows, hopefully I'm wrong.
+        </p>
+        <p class="text-gray-600 mb-4">
+        I figured other people may care too, so I built this site. If you have a specific product you want to track prices for, let me know
+        or better yet <a href="https://github.com/vidluther/priceofgoods.com" class="text-blue-600 hover:text-blue-800"> create a PR on Github </a>
+
+        </p>
+
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">About the Data</h2>
+        <p class="text-gray-600 mb-4">
+          I source all the data directly from the U.S. Bureau of Labor Statistics (BLS)
+          <a href="https://www.bls.gov/data/tools.htm" class="text-blue-600 hover:text-blue-800"> Data Tools </a>.
+          </p>
+        <p class="text-gray-600 mb-4">
+          <strong> It's important to note the BLS only updates their figures monthly, not
+          in real-time. This means the prices you see reflect official government statistics rather than day-to-day
+          retail prices you might see at your local store. </strong>
+        </p>
+        <p class="text-gray-600 mb-4">
+          The prices shown are national and regional averages, and actual prices in your area may vary.
+          Thanks to the BLS API, I can provide historical price data going back twenty years.
+        </p>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">How to Use the Site</h2>
+        <p class="text-gray-600 mb-4">
+        For entertainment purposes only.
+        </p>
+        <ul class="text-gray-600 mb-4 list-disc pl-6">
+          <li>View current national average prices for essential goods</li>
+          <li>Track price changes over different time periods (1 year, 4 years, or 20 years)</li>
+          <li>Compare current prices with historical averages</li>
+          <li>Monitor month-over-month and year-over-year changes</li>
+        </ul>
+      </section>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Get in Touch</h2>
+        <p class="text-gray-600 mb-4">
+You can reach out to me be opening an issue on Github,  at <a href="https://bsky.app/profile/vidluther.com" class="text-blue-600 hover:text-blue-800"> or finding me on BlueSky </a>
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Data Updates</h2>
+        <p class="text-gray-600">
+        I poll the BLS API once a day, but the BLS will update it's data whenever it updates it's data. I try to make it obvious when the data was last updated.
+        </p>
+      </section>
+    </article>
+  </div>
 </Layout>
