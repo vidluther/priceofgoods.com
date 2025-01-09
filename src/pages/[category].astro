@@ -18,8 +18,8 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
-const title = `${categoryData.name} Prices - Track ${categoryData.name} Prices in the USA`;
-const description = `Live tracking of ${categoryData.name.toLowerCase()} prices in the United States. Monitor costs and price trends.`;
+const title = `${categoryData.name} Prices in the US | Monthly BLS Price Tracking`;
+const description = `Track national average ${categoryData.name.toLowerCase()} prices with monthly updates from US Bureau of Labor Statistics data. View historical trends and price changes over time.`;
 ---
 
 <Layout

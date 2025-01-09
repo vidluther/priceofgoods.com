@@ -39,8 +39,8 @@ export async function getStaticPaths() {
 const { item } = Astro.params;
 const { itemInfo, itemData } = Astro.props;
 
-const title = `Price of ${itemInfo.name} -  Current ${itemInfo.name} Prices and Trends in USA`;
-const description = `${itemInfo.name.toLowerCase()} prices across different regions in the United States. Compare national and regional prices, view historical trends, and monitor price changes.`;
+const title = `${itemInfo.name} Prices: Monthly US Average Cost per ${itemInfo.unit} | BLS Stats`;
+const description = `Monitor ${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
 ---
 
 <Layout
