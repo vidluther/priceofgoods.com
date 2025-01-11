@@ -57,10 +57,8 @@ const datasetStructuredData = {
     url: "https://priceofgoods.com"
   },
   temporalCoverage: `${itemData.history[0].year}/${itemData.history[itemData.history.length - 1].year}`,
-  spatialCoverage: {
-    "@type": "Country",
-    name: "United States"
-  },
+  spatialCoverage: "US",
+    license: "https://www.bls.gov/opub/opub-rights.htm",
   variableMeasured: [
     {
       "@type": "PropertyValue",
