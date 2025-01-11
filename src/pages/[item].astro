@@ -38,34 +38,44 @@ const { itemInfo, itemData } = Astro.props;
 const title = `Average Price of ${itemInfo.name} per ${itemInfo.unit}`;
 const description = `Monitor ${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
 
-// Create JSON-LD structured data
-const structuredData = {
+// Create JSON-LD structured data for the price dataset
+const datasetStructuredData = {
   "@context": "https://schema.org",
-  "@type": "Product",
-  name: itemInfo.name,
-  description: `Current and historical prices for ${itemInfo.name} in the United States`,
-  offers: {
-    "@type": "AggregateOffer",
-    priceCurrency: "USD",
-    price: itemData.currentPrices.national.value,
-    lowPrice: Math.min(...itemData.history.map(h => h.value)),
-    highPrice: Math.max(...itemData.history.map(h => h.value)),
-    priceValidUntil: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
-    availability: "https://schema.org/InStock"
+  "@type": "Dataset",
+  name: `${itemInfo.name} Price Statistics`,
+  description: `Historical and current average prices for ${itemInfo.name} in the United States, measured per ${itemInfo.unit}`,
+  keywords: [itemInfo.name, "price statistics", "consumer prices", "BLS data", "price trends"],
+  url: `https://priceofgoods.com/${slugify(itemInfo.name)}`,
+  creator: {
+    "@type": "Organization",
+    name: "US Bureau of Labor Statistics",
+    url: "https://www.bls.gov"
   },
-  additionalProperty: [
+  publisher: {
+    "@type": "Organization",
+    name: "Price of Goods",
+    url: "https://priceofgoods.com"
+  },
+  temporalCoverage: `${itemData.history[0].year}/${itemData.history[itemData.history.length - 1].year}`,
+  spatialCoverage: {
+    "@type": "Country",
+    name: "United States"
+  },
+  variableMeasured: [
     {
       "@type": "PropertyValue",
-      name: "unit",
-      value: itemInfo.unit
-    },
-    {
-      "@type": "PropertyValue",
-      name: "data_source",
-      value: "US Bureau of Labor Statistics"
+      name: "price",
+      unitText: itemInfo.unit,
+      valueReference: {
+        "@type": "PropertyValue",
+        name: "Current National Average",
+        value: itemData.currentPrices.national.value,
+        unitText: "USD"
+      }
     }
   ],
-  temporalCoverage: `${itemData.history[0].year}/${itemData.history[itemData.history.length - 1].year}`
+  measurementTechnique: "Statistical Survey",
+  dateModified: new Date().toISOString().split('T')[0]
 };
 
 // Create breadcrumb structured data
@@ -98,7 +108,7 @@ const breadcrumbData = {
     }}
 >
   <!-- Add structured data to head -->
-  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

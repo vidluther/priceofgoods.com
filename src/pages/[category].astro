@@ -20,6 +20,42 @@ const { categoryData } = Astro.props;
 const title = `${categoryData.name} Average Monthly Prices in the US`;
 const description = `average price of ${categoryData.name.toLowerCase()} with monthly updates from US Bureau of Labor Statistics data. View trends and changes over time.`;
 
+// Create Dataset structured data for the category
+const datasetStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: `${categoryData.name} Price Statistics Dataset`,
+  description: `Comprehensive price statistics and trends for ${categoryData.name.toLowerCase()} in the United States`,
+  url: `https://priceofgoods.com/${slugify(categoryData.name)}`,
+  keywords: [categoryData.name, "price statistics", "consumer prices", "BLS data", "price trends"],
+  creator: {
+    "@type": "Organization",
+    name: "US Bureau of Labor Statistics",
+    url: "https://www.bls.gov"
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Price of Goods",
+    url: "https://priceofgoods.com"
+  },
+  variableMeasured: Object.values(categoryData.items).map(item => ({
+    "@type": "PropertyValue",
+    name: item.name,
+    unitText: item.unit
+  })),
+  spatialCoverage: {
+    "@type": "Country",
+    name: "United States"
+  },
+  measurementTechnique: "Statistical Survey",
+  dateModified: new Date().toISOString().split('T')[0],
+  includedInDataCatalog: {
+    "@type": "DataCatalog",
+    name: "Price of Goods Statistical Database",
+    url: "https://priceofgoods.com"
+  }
+};
+
 // Create breadcrumb structured data
 const breadcrumbData = {
   "@context": "https://schema.org",
@@ -39,63 +75,6 @@ const breadcrumbData = {
     }
   ]
 };
-
-// Create ItemList structured data for the category's products
-const itemListData = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: `${categoryData.name} Price Tracking`,
-  description: `Current prices and historical trends for ${categoryData.name.toLowerCase()} in the United States`,
-  numberOfItems: Object.keys(categoryData.items).length,
-  itemListElement: Object.entries(categoryData.items).map(([key, item], index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    item: {
-      "@type": "Product",
-      name: item.name,
-      description: `Track ${item.name.toLowerCase()} prices per ${item.unit}`,
-      url: `https://priceofgoods.com/${slugify(item.name)}`,
-      additionalProperty: [
-        {
-          "@type": "PropertyValue",
-          name: "unit",
-          value: item.unit
-        },
-        {
-          "@type": "PropertyValue",
-          name: "category",
-          value: categoryData.name
-        }
-      ]
-    }
-  }))
-};
-
-// Create Dataset structured data for the category
-const datasetData = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  name: `${categoryData.name} Price Statistics`,
-  description: `Historical price data for ${categoryData.name.toLowerCase()} products from the US Bureau of Labor Statistics`,
-  creator: {
-    "@type": "Organization",
-    name: "US Bureau of Labor Statistics"
-  },
-  includedInDataCatalog: {
-    "@type": "DataCatalog",
-    name: "Price of Goods"
-  },
-  distribution: {
-    "@type": "DataDownload",
-    encodingFormat: "JSON",
-    contentUrl: `https://priceofgoods.com/api/categories/${slugify(categoryData.name)}`
-  },
-  temporalCoverage: "P10Y", // Indicates 10 years of historical data
-  spatialCoverage: {
-    "@type": "Country",
-    name: "United States"
-  }
-};
 ---
 
 <Layout
@@ -108,8 +87,7 @@ const datasetData = {
 >
   <!-- Add structured data to head -->
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
-  <script type="application/ld+json" set:html={JSON.stringify(itemListData)} />
-  <script type="application/ld+json" set:html={JSON.stringify(datasetData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
