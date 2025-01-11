@@ -43,10 +43,8 @@ const datasetStructuredData = {
     name: item.name,
     unitText: item.unit
   })),
-  spatialCoverage: {
-    "@type": "Country",
-    name: "United States"
-  },
+  spatialCoverage: "US",
+    license: "https://www.bls.gov/opub/opub-rights.htm",
   measurementTechnique: "Statistical Survey",
   dateModified: new Date().toISOString().split('T')[0],
   includedInDataCatalog: {
