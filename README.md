@@ -18,7 +18,7 @@ When I launched this website on January 1st 2025, my wife suggested tracking spe
 - [x] Track goods like, eggs, milk, bread, and gas
 - [x] Track meats like, beef, chicken, bacon etc #1.
 - [x] Track produce like, apples, oranges, bananas etc #2.
-- [ ] Organize/categorize into sub pages
+- [x] Organize/categorize into sub pages
 - [ ] Create a Github issue, or better yet, a PR and help me out!
 
 ### Technology Stack
