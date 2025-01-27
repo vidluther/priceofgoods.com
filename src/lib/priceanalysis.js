@@ -1,6 +1,7 @@
 // src/lib/priceAnalysis.js
-import { fetchItemHistory, fetchLatestItemData } from "./fetchUtils";
 import Anthropic from "@anthropic-ai/sdk";
+import { fetchItemHistory, fetchLatestItemData } from "./fetchUtils";
+import { cacheAnalysis, getCachedAnalysis } from "./llmcache";
 
 const anthropicClient = new Anthropic({
   apiKey: import.meta.env.PUBLIC_ANTHROPIC_API_KEY,
@@ -121,29 +122,31 @@ async function fetchPerplexityAnalysis(prompt) {
   return markdown;
 }
 
-/**
- * Fetches and analyzes price data for a specific item
- */
 export async function analyzeItemPrices(item, useAnthropic = true) {
+  // Only use cache in development
+  if (import.meta.env.PUBLIC_CACHE_AI_RESPONSE) {
+    const cached = await getCachedAnalysis(item.dataKey);
+    if (cached) {
+      console.log(
+        `Using cached analysis for ${item.name} from ${cached.provider}`,
+      );
+      return cached.data;
+    }
+  }
+
   try {
-    // Fetch national and regional data
-    const [nationalData, historyData] = await Promise.all([
+    // Fetch all data in parallel
+    const [nationalData, historyData, regionalData] = await Promise.all([
       fetchLatestItemData("national", item.dataKey),
       fetchItemHistory("national", item.dataKey),
-    ]);
-
-    // Fetch regional data
-    const regions = ["northeast", "midwest", "south", "west"];
-    const regionalData = await Promise.all(
-      regions.map((region) =>
-        fetchLatestItemData(region, item.dataKey).then((data) => ({
+      Promise.all(
+        ["northeast", "midwest", "south", "west"].map(async (region) => ({
           region,
-          ...data,
+          ...(await fetchLatestItemData(region, item.dataKey)),
         })),
       ),
-    );
+    ]);
 
-    // Generate analysis prompt
     const prompt = generatePrompt(
       item.name,
       nationalData,
@@ -151,19 +154,27 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       regionalData,
     );
 
+    let analysis;
     try {
       if (useAnthropic) {
-        return await fetchAnthropicAnalysis(prompt);
+        analysis = await fetchAnthropicAnalysis(prompt);
+        if (import.meta.env.DEV) {
+          await cacheAnalysis(item.dataKey, analysis, prompt, "anthropic");
+        }
+      } else {
+        analysis = await fetchPerplexityAnalysis(prompt);
+        if (import.meta.env.DEV) {
+          await cacheAnalysis(item.dataKey, analysis, prompt, "perplexity");
+        }
       }
-
-      console.log("Going to use Perplexity");
-      return await fetchPerplexityAnalysis(prompt);
     } catch (error) {
-      console.error("Error during API call or processing analysis:", error);
+      console.error(`Analysis failed for ${item.name}:`, error);
       throw error;
     }
+
+    return analysis;
   } catch (error) {
     console.error(`Error analyzing prices for ${item.name}:`, error);
-    throw error;
+    throw new Error(`Analysis failed: ${error.message}`);
   }
 }
