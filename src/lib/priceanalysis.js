@@ -1,5 +1,10 @@
 // src/lib/priceAnalysis.js
 import { fetchItemHistory, fetchLatestItemData } from "./fetchUtils";
+import Anthropic from "@anthropic-ai/sdk";
+
+const anthropicClient = new Anthropic({
+  apiKey: import.meta.env.PUBLIC_ANTHROPIC_API_KEY,
+});
 
 /**
  * Generates a prompt for the Anthropic API based on price data
@@ -63,10 +68,63 @@ function generatePrompt(nameOfGood, itemData, historyData, regions) {
   return prompt;
 }
 
+async function fetchAnthropicAnalysis(prompt) {
+  try {
+    const message = await anthropicClient.messages.create({
+      max_tokens: 1024,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "claude-3-5-sonnet-latest",
+    });
+    console.log(message.content);
+    return message.content[0].text;
+  } catch (error) {
+    console.error("Error during API call or processing analysis:", error);
+    throw error;
+  }
+}
+
+async function fetchPerplexityAnalysis(prompt) {
+  const perplexityKey = import.meta.env.PUBLIC_PERPLEXITY_API_KEY;
+  // console.log(prompt);
+  const perplexityResponse = await fetch(
+    "https://api.perplexity.ai/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${perplexityKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "sonar-pro",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        frequency_penalty: 1.0,
+        max_tokens: 1000,
+      }),
+    },
+  );
+  const perplexityAnalysis = await perplexityResponse.json();
+
+  // Generate markdown content
+  const citations = perplexityAnalysis.citations;
+  const markdown = perplexityAnalysis.choices[0].message.content;
+  return markdown;
+}
+
 /**
  * Fetches and analyzes price data for a specific item
  */
-export async function analyzeItemPrices(item) {
+export async function analyzeItemPrices(item, useAnthropic = true) {
   try {
     // Fetch national and regional data
     const [nationalData, historyData] = await Promise.all([
@@ -92,67 +150,14 @@ export async function analyzeItemPrices(item) {
       historyData,
       regionalData,
     );
-    // console.log(prompt);
-    // Call Anthropic API
+
     try {
-      // const anthropicResponse = await fetch(
-      //   "https://api.anthropic.com/v1/messages",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       "x-api-key": import.meta.env.PUBLIC_ANTHROPIC_API_KEY,
-      //       "anthropic-version": "2023-06-01",
-      //     },
-      //     body: JSON.stringify({
-      //       model: "claude-3-5-sonnet-20241022",
-      //       messages: [
-      //         {
-      //           role: "user",
-      //           content: prompt,
-      //         },
-      //       ],
-      //       max_tokens: 1000,
-      //     }),
-      //   },
-      // );
-      // const Anthropic_analysis = await anthropicResponse.json();
-      // console.log("Anthropic_Analysis:", Anthropic_analysis);
-      const perplexityKey = import.meta.env.PUBLIC_PERPLEXITY_API_KEY;
+      if (useAnthropic) {
+        return await fetchAnthropicAnalysis(prompt);
+      }
 
-      // console.log(prompt);
-      const perplexityResponse = await fetch(
-        "https://api.perplexity.ai/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${perplexityKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "sonar-pro",
-            messages: [
-              {
-                role: "user",
-                content: prompt,
-              },
-            ],
-            frequency_penalty: 1.0,
-            max_tokens: 1000,
-          }),
-        },
-      );
-
-      // console.log(perplexityResponse);
-      const perplexityAnalysis = await perplexityResponse.json();
-      // console.log("Perplexity_Analysis:", perplexityAnalysis);
-      // console.log(perplexityAnalysis.choices);
-      // Generate markdown content
-      const citations = perplexityAnalysis.citations;
-      const markdown = perplexityAnalysis.choices[0].message.content;
-
-      return markdown;
+      console.log("Going to use Perplexity");
+      return await fetchPerplexityAnalysis(prompt);
     } catch (error) {
       console.error("Error during API call or processing analysis:", error);
       throw error;

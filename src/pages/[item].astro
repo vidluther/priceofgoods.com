@@ -42,7 +42,7 @@ const { itemInfo, itemData } = Astro.props;
 const title = `Average Price of ${itemInfo.name} per ${itemInfo.unit}`;
 const description = `Monitor ${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
 
-const analysis = await analyzeItemPrices(itemInfo);
+const analysis = await analyzeItemPrices(itemInfo, false);
 const htmlAnalysis = marked.parse(analysis, {
   // gfm: true,
   breaks: true
