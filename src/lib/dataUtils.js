@@ -23,6 +23,7 @@ const DEFAULT_PRICE_DATA = {
 
 export async function processItemData(itemKey) {
   try {
+    console.log("Proccessing item:", itemKey);
     // Fetch all regional data in parallel
     const [currentPrices, historicalData] = await Promise.all([
       Promise.all(
@@ -33,7 +34,6 @@ export async function processItemData(itemKey) {
               console.warn(`No current price data for ${region}/${itemKey}`);
               return { region, ...DEFAULT_PRICE_DATA };
             }
-
             return {
               region,
               current: data.value ? parseFloat(data.value) : 0,

@@ -11,6 +11,7 @@ import StaticItemInfo from '../components/StaticItemInfo.astro';
 import RegionalComparison from '../components/RegionalComparison.astro';
 import PriceHistoryChart from '../components/react/PriceHistoryChart';
 import { analyzeItemPrices } from '../lib/priceAnalysis';
+
 // Generate all possible item routes
 export async function getStaticPaths() {
   const goodsConfig = await fetchGoodsConfig();
