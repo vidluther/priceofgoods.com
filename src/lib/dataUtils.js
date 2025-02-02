@@ -23,8 +23,6 @@ const DEFAULT_PRICE_DATA = {
 
 export async function processItemData(itemKey) {
   try {
-    console.log("Processing item:", itemKey);
-
     // ===============================
     // STEP 1: FETCH CURRENT PRICES
     // ===============================
