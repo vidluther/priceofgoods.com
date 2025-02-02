@@ -7,10 +7,10 @@ import { marked } from 'marked';
 import { fetchGoodsConfig } from '../lib/fetchUtils';
 import { processItemData, regions } from '../lib/dataUtils';
 import { slugify } from '../lib/stringUtilities';
-import StaticItemInfo from '../components/StaticItemInfo.astro';
 import RegionalComparison from '../components/RegionalComparison.astro';
 import PriceHistoryChart from '../components/react/PriceHistoryChart';
 import { analyzeItemPrices } from '../lib/priceanalysis';
+import ItemDetailPage from "../components/react/ItemDetailPage";
 
 // Generate all possible item routes
 export async function getStaticPaths() {
@@ -44,7 +44,7 @@ const title = `Average Price of ${itemInfo.name} per ${itemInfo.unit}`;
 const description = `${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
 const useAnthropic = false;
 const analysis = await analyzeItemPrices(itemInfo, useAnthropic);
-const htmlAnalysis = marked.parse(analysis, {
+const aiAnalysis = marked.parse(analysis, {
   breaks: true
 });
 
@@ -121,40 +121,14 @@ const breadcrumbData = {
   <!-- Add structured data to head -->
   <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
-
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- National Price Info -->
-    <StaticItemInfo
+    <ItemDetailPage
       item={itemInfo}
-      currentPrice={itemData.currentPrices.national}
+      currentPrices={itemData.currentPrices}
+      historyData={itemData.history}
+      aiAnalysis={aiAnalysis}
+      client:load
     />
-
-
-    <div class="h-px bg-gray-200 my-8"></div>
-
-    <!-- Regional Comparison -->
-    <RegionalComparison
-      item={itemInfo}
-      prices={itemData.currentPrices}
-      regions={regions}
-    />
-
-
-    <div class="h-px bg-gray-200 my-8"></div>
-
-    <!-- Price History Chart -->
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <PriceHistoryChart
-        item={itemInfo}
-        historyData={itemData.history}
-        regions={regions}
-        client:visible
-      />
-    </div>
-
-    <div class="h-px bg-gray-200 my-8"></div>
-    <div class="prose max-w-none">
-      <Fragment set:html={htmlAnalysis} />
-    </div>
+  </Layout>
   </div>
 </Layout>
