@@ -22,11 +22,11 @@ const formatChange = (change) => {
       .map(([region, info]) => (
         <div class="p-4 rounded-lg bg-gray-50">
           <div class="flex items-center gap-2 mb-2">
-            <svg 
-              class="w-4 h-4" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke={info.color} 
+            <svg
+              class="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke={info.color}
               stroke-width="2"
             >
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -37,26 +37,29 @@ const formatChange = (change) => {
           <div class="text-2xl font-bold">
             ${prices[region].current.toFixed(2)}
           </div>
+          <div class="text-sm text-gray-600 mt-1">
+            As of: {prices[region].latestDate || 'N/A'}
+          </div>
           {prices[region].percentChange !== null && (
             <div class="flex flex-col gap-1 mt-2">
               <div class="flex items-center gap-1">
                 {prices[region].percentChange > 0 ? (
-                  <svg 
-                    class="text-red-600 w-5 h-5" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    class="text-red-600 w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
                     stroke-width="2"
                   >
                     <path d="M23 6L13.5 15.5L8.5 10.5L1 18" />
                     <path d="M17 6H23V12" />
                   </svg>
                 ) : (
-                  <svg 
-                    class="text-green-600 w-5 h-5" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    class="text-green-600 w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
                     stroke-width="2"
                   >
                     <path d="M23 18L13.5 8.5L8.5 13.5L1 6" />

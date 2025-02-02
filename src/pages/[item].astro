@@ -41,15 +41,14 @@ const { item } = Astro.params;
 const { itemInfo, itemData } = Astro.props;
 
 const title = `Average Price of ${itemInfo.name} per ${itemInfo.unit}`;
-const description = `Monitor ${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
+const description = `${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
 const useAnthropic = false;
-const analysis = await analyzeItemPrices(itemInfo, useAnthropic );
+const analysis = await analyzeItemPrices(itemInfo, useAnthropic);
 const htmlAnalysis = marked.parse(analysis, {
-  // gfm: true,
   breaks: true
 });
 
-// Create JSON-LD structured data for the price dataset
+// Create JSON-LD structured data for the price dataset.
 const datasetStructuredData = {
   "@context": "https://schema.org",
   "@type": "Dataset",
@@ -67,9 +66,11 @@ const datasetStructuredData = {
     name: "Price of Goods",
     url: "https://priceofgoods.com"
   },
-  temporalCoverage: `${itemData.history[0].year}/${itemData.history[itemData.history.length - 1].year}`,
+  temporalCoverage: itemData.history.length > 0
+    ? `${itemData.history[0].date}/${itemData.history[itemData.history.length - 1].date}`
+    : "",
   spatialCoverage: "US",
-    license: "https://www.bls.gov/opub/opub-rights.htm",
+  license: "https://www.bls.gov/opub/opub-rights.htm",
   variableMeasured: [
     {
       "@type": "PropertyValue",
@@ -78,7 +79,7 @@ const datasetStructuredData = {
       valueReference: {
         "@type": "PropertyValue",
         name: "Current National Average",
-        value: itemData.currentPrices.national.value,
+        value: itemData.currentPrices.national.current,
         unitText: "USD"
       }
     }
@@ -87,7 +88,7 @@ const datasetStructuredData = {
   dateModified: new Date().toISOString().split('T')[0]
 };
 
-// Create breadcrumb structured data
+// Create breadcrumb structured data.
 const breadcrumbData = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -106,36 +107,45 @@ const breadcrumbData = {
     }
   ]
 };
+
+console.log(itemData);
 ---
 
 <Layout
-    title={title}
-    description={description}
-    ogImage={{
-      type: 'items',
-      slug: itemInfo.dataKey
-    }}
+  title={title}
+  description={description}
+  ogImage={{
+    type: 'items',
+    slug: itemInfo.dataKey
+  }}
 >
   <!-- Add structured data to head -->
   <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- National Price Info -->
     <StaticItemInfo
       item={itemInfo}
       currentPrice={itemData.currentPrices.national}
     />
+    <div class="text-sm text-gray-600 mt-2">
+      National prices as of: {itemData.currentPrices.national.latestDate || 'N/A'}
+    </div>
 
     <div class="h-px bg-gray-200 my-8"></div>
 
+    <!-- Regional Comparison -->
     <RegionalComparison
       item={itemInfo}
       prices={itemData.currentPrices}
       regions={regions}
     />
 
+
     <div class="h-px bg-gray-200 my-8"></div>
 
+    <!-- Price History Chart -->
     <div class="bg-white rounded-lg shadow-lg p-6">
       <PriceHistoryChart
         item={itemInfo}
@@ -144,10 +154,10 @@ const breadcrumbData = {
         client:visible
       />
     </div>
+
     <div class="h-px bg-gray-200 my-8"></div>
     <div class="prose max-w-none">
       <Fragment set:html={htmlAnalysis} />
     </div>
   </div>
-
 </Layout>

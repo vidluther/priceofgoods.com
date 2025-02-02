@@ -1,6 +1,6 @@
 ---
 const { item, currentPrice } = Astro.props;
-
+console.log(currentPrice)
 
 const getChangeColor = (change) => {
   if (change > 0) return "text-red-600";
@@ -26,6 +26,9 @@ const formatChange = (change) => {
         ${currentPrice.current.toFixed(2)}
       </span>
       <span class="text-gray-600">per {item.unit}</span>
+    </div>
+    <div class="text-sm text-gray-600 mt-1">
+      As of: {currentPrice.latestDate || 'N/A'}
     </div>
     {currentPrice.percentChange !== null && (
       <div class="flex items-center gap-2 mt-2">
