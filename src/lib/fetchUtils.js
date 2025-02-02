@@ -22,8 +22,7 @@ export async function fetchGoodsConfig() {
  * @returns {Promise<Object|null>} The latest price data or null if not found
  */
 export async function fetchLatestItemData(region, item) {
-  console.log("Item:", item);
-  console.log("Region:", region);
+  console.log("Item:", item, "Region:", region);
 
   try {
     const response = await fetch(
