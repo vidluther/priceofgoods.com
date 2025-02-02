@@ -1,9 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import CategorySection from '../components/react/CategorySection';
+import CategoryRow from '../components/react/CategoryRow';
 import { fetchGoodsConfig } from '../lib/fetchUtils';
 
 const goodsConfig = await fetchGoodsConfig();
+
 const title = "What was the price of goods last month? 🤔";
 const description = "Tracking the price of goods normal people consume over time. 📈";
 ---
@@ -27,7 +28,7 @@ const description = "Tracking the price of goods normal people consume over time
     </div>
 
     {Object.entries(goodsConfig.categories).map(([key, category]) => (
-      <CategorySection
+      <CategoryRow
         category={category.name}
         items={category.items}
         client:load
