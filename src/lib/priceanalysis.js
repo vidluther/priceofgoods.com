@@ -111,8 +111,8 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       throw error;
     }
     const timestamp = Date.now();
-    console.log("Returning analysis", analysis);
-    console.log("Returning citations", citations);
+    // console.log("Returning analysis", analysis);
+    // console.log("Returning citations", citations);
     // Return the analysis result with the same structure as cachedAnalysis.
     return { data: analysis, citations, timestamp };
   } catch (error) {
