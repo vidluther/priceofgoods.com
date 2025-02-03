@@ -10,6 +10,6 @@ import markdoc from "@astrojs/markdoc";
 
 export default defineConfig({
   integrations: [react(), tailwind(), sitemap(), markdoc()],
-  site: "https://priceofgoods.com",
+  site: "https://www.priceofgoods.com",
   output: "static",
 });
