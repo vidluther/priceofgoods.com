@@ -25,7 +25,7 @@ export async function getCachedAnalysis(itemKey) {
       timestamp: cached.timestamp,
     };
   } catch (error) {
-    console.error("Error reading from cache:", error);
+    console.log("Error reading from cache:", error);
     return null;
   }
 }
