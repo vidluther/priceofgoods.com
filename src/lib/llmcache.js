@@ -6,7 +6,7 @@ const CACHE_DIR = ".cache/llm";
 /**
  * Get cached analysis for an item
  * @param {string} itemKey - The unique identifier for the item
- * @returns {Promise<Object|null>} The cached analysis or null if not found/expired
+ * @returns {Promise<{data: string, citations?: Array, timestamp: number, prompt: string, provider: string}|null>} The cached analysis or null if not found/expired
  */
 export async function getCachedAnalysis(itemKey) {
   try {
@@ -19,8 +19,13 @@ export async function getCachedAnalysis(itemKey) {
       return null;
     }
 
-    return cached;
-  } catch {
+    return {
+      data: cached.data,
+      citations: cached.citations || [],
+      timestamp: cached.timestamp,
+    };
+  } catch (error) {
+    console.error("Error reading from cache:", error);
     return null;
   }
 }
@@ -29,26 +34,25 @@ export async function getCachedAnalysis(itemKey) {
  * Cache analysis result for an item
  * @param {string} itemKey - The unique identifier for the item
  * @param {Object} analysis - The analysis result to cache
+ * @param {Array} [citations] - Optional citations from the analysis
  * @param {string} prompt - The prompt used for analysis
  * @param {'anthropic'|'perplexity'} provider - The LLM provider used
  */
-export async function cacheAnalysis(
-  itemKey,
-  analysis,
-  prompt,
-  provider = "perplexity",
-) {
+export async function cacheAnalysis(itemKey, analysis, citations = [], prompt) {
   const entry = {
     timestamp: Date.now(),
     data: analysis,
+    citations,
     prompt,
-    provider,
   };
 
   try {
     await fs.mkdir(CACHE_DIR, { recursive: true });
     const filePath = path.join(CACHE_DIR, `${itemKey}.json`);
     await fs.writeFile(filePath, JSON.stringify(entry, null, 2));
+    console.log(
+      `Successfully cached analysis for ${itemKey} with ${citations.length} citations`,
+    );
   } catch (error) {
     console.error("Error writing to cache:", error);
   }

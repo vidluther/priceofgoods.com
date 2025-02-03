@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
 import remarkGfm from 'remark-gfm';
 import { marked } from 'marked';
 
@@ -42,10 +41,12 @@ const { itemInfo, itemData } = Astro.props;
 
 const title = `Average Price of ${itemInfo.name} per ${itemInfo.unit}`;
 const description = `${itemInfo.name.toLowerCase()} prices from monthly US Bureau of Labor Statistics reports. View 1-year, 4-year, and 20-year historical price trends, with official national and regional averages.`;
-const useAnthropic = false;
-const analysis = await analyzeItemPrices(itemInfo, useAnthropic);
-const aiAnalysis = marked.parse(analysis, {
-  breaks: true
+
+// Analyze the item prices and parse the markdown analysis into HTML.
+const response = await analyzeItemPrices(itemInfo);
+// console.log(response);
+const aiAnalysis = marked.parse(response.data, {
+  // You can pass additional options here if needed (e.g., use remarkGfm)
 });
 
 // Create JSON-LD structured data for the price dataset.
@@ -107,7 +108,6 @@ const breadcrumbData = {
     }
   ]
 };
-
 ---
 
 <Layout
@@ -121,7 +121,9 @@ const breadcrumbData = {
   <!-- Add structured data to head -->
   <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbData)} />
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Render the item detail page component which shows the analysis markdown -->
     <ItemDetailPage
       item={itemInfo}
       currentPrices={itemData.currentPrices}
@@ -129,6 +131,26 @@ const breadcrumbData = {
       aiAnalysis={aiAnalysis}
       client:load
     />
-  </Layout>
+
+    <!-- Render the citations if there are any -->
+    {response.citations && response.citations.length > 0 && (
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Citations</h2>
+        <ol class="list-decimal list-inside text-sm text-gray-700">
+          {response.citations.map((citation, index) => (
+            <li key={index}>
+              <a
+                href={citation}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 hover:underline"
+              >
+                {citation}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
   </div>
 </Layout>
