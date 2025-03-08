@@ -1,12 +1,14 @@
 # Price Of Goods
 
+- Testing Gitbutler
+
 This website was made so that I can easily see what the price of certain goods are, and compare them to what they were in the past.
 
 People love to talk about the price of X or Y these days and how much it's gone up (usually) in the past N years. Most of these are anecdotal and not based on any real data.
 So I wanted to create a website that would allow me to easily see the price of goods over time, and compare them to what they were in the past.
 
 I'm using the [Bureau of Labor Statistics](https://www.bls.gov/) to get the data for the price of goods. They have a lot of data, and it's all free to use.
-If you want to look something up yourself, I recommend you go here https://data.bls.gov/PDQWeb/ap and look things up yourself. It's a great resource.
+If you want to look something up yourself, I recommend you go here <https://data.bls.gov/PDQWeb/ap> and look things up yourself. It's a great resource.
 
 ## Why are you only tracking certain goods?
 
@@ -48,7 +50,7 @@ Claude helped me along the way, especially with the rechart stuff and the data f
 I started the process of building this website around 6pm on December 31st 2024, and I launched it around 12am on January 1st 2025.
 
 The hurdles I had were related to caching the data and making sure I didn't run out of API credits.
-I'm using Cloudflare Workers to fetch the data (https://github.com/vidluther/pog-cache) and Cloudflare R2 to store the data. I'm also using Cloudflare Pages to host the website.
+I'm using Cloudflare Workers to fetch the data (<https://github.com/vidluther/pog-cache>) and Cloudflare R2 to store the data. I'm also using Cloudflare Pages to host the website.
 The CF Worker pulls the data once a day, creates a JSON file that I can consume in the website, and uploads it to an R2 bucket, which this website consumes. This way I don't have to hit the BLS API every time someone visits the website.
 
 I think I could probably also make the CF worker run once a month, rather than once a day, since the data doesn't change every day.
