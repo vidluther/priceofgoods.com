@@ -2,14 +2,16 @@
 import { defineConfig } from "astro/config";
 
 import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
-
+import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
 import markdoc from "@astrojs/markdoc";
 
 export default defineConfig({
-  integrations: [react(), tailwind(), sitemap(), markdoc()],
+  integrations: [react(), sitemap(), markdoc()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   site: "https://www.priceofgoods.com",
   output: "static",
 });
