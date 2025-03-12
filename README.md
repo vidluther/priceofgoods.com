@@ -53,3 +53,17 @@ I'm using Cloudflare Workers to fetch the data (<https://github.com/vidluther/po
 The CF Worker pulls the data once a day, creates a JSON file that I can consume in the website, and uploads it to an R2 bucket, which this website consumes. This way I don't have to hit the BLS API every time someone visits the website.
 
 I think I could probably also make the CF worker run once a month, rather than once a day, since the data doesn't change every day.
+
+### Building the Website
+
+For local development, you can use the following command:
+
+```
+npm run dev
+```
+
+To build the website for production, you can use the following command:
+
+```
+npm run build
+```
