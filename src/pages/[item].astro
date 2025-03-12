@@ -141,16 +141,16 @@ const breadcrumbData = {
             <h2 class="text-xl font-semibold mb-4">Citations</h2>
             <ol class="list-decimal list-inside text-sm text-gray-700">
               {response.citations.map((citation, index) => (
-                <li>
-                  <a
-                    href={citation}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-600 hover:underline"
-                  >
-                    {citation}
-                  </a>
-                </li>
+              <li key={citation}>
+                               <a
+                                 href={citation}
+                                 target="_blank"
+                                 rel="noopener noreferrer"
+                                 class="text-blue-600 hover:underline"
+                               >
+                                 {citation}
+                               </a>
+                             </li>
               ))}
             </ol>
           </div>
