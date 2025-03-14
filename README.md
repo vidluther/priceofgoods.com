@@ -2,6 +2,8 @@
 
 Testing Change of the README.md file
 
+Gitbutler Commit change test.
+
 This website was made so that I can easily see what the price of certain goods are, and compare them to what they were in the past.
 
 People love to talk about the price of X or Y these days and how much it's gone up (usually) in the past N years. Most of these are anecdotal and not based on any real data.
