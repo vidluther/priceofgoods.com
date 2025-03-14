@@ -2,7 +2,7 @@
 
 Testing Change of the README.md file
 
-Butler Review and GH Review and PRs? Oh my!!!
+"Comparing Butler Review, GitHub Reviews, and Pull Requests"
 
 This website was made so that I can easily see what the price of certain goods are, and compare them to what they were in the past.
 
