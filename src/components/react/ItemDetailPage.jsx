@@ -194,15 +194,36 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis }) => {
       </div>
 
       {/* AI Market Analysis Section */}
-      <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">🤖</span>
-          <h2 className="text-xl font-semibold">Market Analysis</h2>
+      <div className="mt-8 bg-white rounded-lg shadow-lg p-6 border-t-4 border-blue-600">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="text-2xl bg-blue-100 p-2 rounded-full">🤖</span>
+          <h2 className="text-2xl font-semibold text-blue-900">Market Analysis</h2>
         </div>
-        <div
-          className="prose max-w-none text-gray-600"
-          dangerouslySetInnerHTML={{ __html: aiAnalysis }}
-        />
+        <div className="prose prose-lg max-w-none">
+          {aiAnalysis ? (
+            <article className="markdown-body">
+              <div 
+                dangerouslySetInnerHTML={{ __html: aiAnalysis }} 
+                className="prose-h1:text-2xl prose-h1:font-bold prose-h1:text-blue-900 prose-h1:mb-4 
+                           prose-h2:text-xl prose-h2:font-semibold prose-h2:text-blue-800 prose-h2:mt-6 prose-h2:mb-3
+                           prose-h3:text-lg prose-h3:font-medium prose-h3:text-blue-700 prose-h3:mt-5 prose-h3:mb-2
+                           prose-p:text-gray-700 prose-p:my-3 prose-p:leading-relaxed
+                           prose-a:text-blue-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+                           prose-strong:text-blue-700 prose-strong:font-semibold
+                           prose-ul:my-4 prose-ul:pl-6 prose-li:text-gray-700 prose-li:my-1 prose-li:marker:text-blue-500
+                           prose-ol:my-4 prose-ol:pl-6
+                           prose-blockquote:border-l-4 prose-blockquote:border-blue-300 prose-blockquote:bg-blue-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:my-4 prose-blockquote:rounded-r prose-blockquote:italic prose-blockquote:text-gray-700
+                           prose-code:bg-gray-100 prose-code:p-1 prose-code:rounded prose-code:text-blue-800 prose-code:text-sm
+                           prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-md prose-pre:overflow-auto prose-pre:my-4
+                           prose-table:border-collapse prose-table:w-full prose-table:my-4
+                           prose-th:bg-blue-50 prose-th:p-2 prose-th:text-left prose-th:font-medium prose-th:border prose-th:border-gray-300
+                           prose-td:border prose-td:p-2 prose-td:border-gray-200"
+              />
+            </article>
+          ) : (
+            <p className="text-gray-500 italic">Analysis not available for this item.</p>
+          )}
+        </div>
       </div>
     </div>
   );
