@@ -22,7 +22,17 @@ and provide insights. Here's the data you'll be working with:
   </regional_variations>
 
 Use specific data points and cite relevant external events affecting prices. Note any significant correlations between price changes and external factors.
-Make sure your response is in Markdown. Good luck!
+
+IMPORTANT: Format your response using proper Markdown syntax with the following guidelines:
+1. Use # for main heading (title)
+2. Use ## for section headings (e.g., "Price Trends", "Regional Analysis", "Key Factors")
+3. Use bullet points with * for lists
+4. Use **bold** for important facts and figures
+5. Use tables for comparative data when appropriate
+6. Include a "Summary" section at the top with key findings
+7. Use blockquotes (>) for highlighting important insights
+
+Your final analysis should be well-structured, including proper headings, paragraphs, and formatting.
 `;
   return prompt;
 }

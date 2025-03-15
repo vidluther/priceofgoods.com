@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import remarkGfm from 'remark-gfm';
 import { marked } from 'marked';
+import remarkGfm from 'remark-gfm';
 
 import { fetchGoodsConfig } from '../lib/fetchUtils';
 import { processItemData, regions } from '../lib/dataUtils';
@@ -10,6 +10,15 @@ import RegionalComparison from '../components/RegionalComparison.astro';
 import PriceHistoryChart from '../components/react/PriceHistoryChart';
 import { analyzeItemPrices } from '../lib/priceanalysis';
 import ItemDetailPage from "../components/react/ItemDetailPage";
+
+// Setup marked options
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+  headerIds: true,
+  mangle: false,
+  smartLists: true,
+});
 
 // Generate all possible item routes
 export async function getStaticPaths() {
@@ -45,9 +54,7 @@ const description = `The average price of ${itemInfo.name.toLowerCase()} in the 
 // Analyze the item prices and parse the markdown analysis into HTML.
 const response = await analyzeItemPrices(itemInfo);
 // console.log(response);
-const aiAnalysis = marked.parse(response.data, {
-  // You can pass additional options here if needed (e.g., use remarkGfm)
-});
+const aiAnalysis = marked.parse(response.data);
 
 // Create JSON-LD structured data for the price dataset.
 const datasetStructuredData = {
