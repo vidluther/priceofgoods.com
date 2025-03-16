@@ -32,7 +32,7 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header Section */}
-      <h1 className="text-4xl font-bold mb-2">The Price of {item.name}</h1>
+      <h2 className="text-4xl font-bold mb-2">The Price of {item.name}</h2>
       <p className="text-gray-600 mb-8">
         As of {currentPrices?.national?.latestDate}
       </p>
