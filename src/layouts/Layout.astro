@@ -3,38 +3,42 @@ interface Props {
   title: string;
   description: string;
   ogImage?: {
-    type: 'categories' | 'items' | 'home';
+    type: "categories" | "items" | "home";
     slug: string;
-  }
+  };
 }
 
 const { title, description, ogImage } = Astro.props;
-const siteUrl = 'https://priceofgoods.com';
+const siteUrl = "https://priceofgoods.com";
 const fullOgImageUrl = ogImage
   ? `${siteUrl}/og-image/${ogImage.type}/${ogImage.slug}.png`
   : `${siteUrl}/default-og.png`;
 
 import "../styles/global.css";
 
-import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import PostHog from "../components/posthog.astro";
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFWES7P3JD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFWES7P3JD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-    gtag('config', 'G-NFWES7P3JD');
-  </script>
+      gtag("config", "G-NFWES7P3JD");
+    </script>
 
     <meta charset="UTF-8" />
-    <meta name="description" content={description}>
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
@@ -52,11 +56,14 @@ import Footer from '../components/Footer.astro';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullOgImageUrl} />
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="7bed8295-efd8-476a-a6e8-d35ce7f1a012"></script>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="7bed8295-efd8-476a-a6e8-d35ce7f1a012"></script>
     <title>{title} - Price of Goods</title>
   </head>
   <body>
-
+    <PostHog />
     <nav class="bg-white shadow">
       <Navigation />
     </nav>
