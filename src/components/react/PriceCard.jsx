@@ -29,7 +29,9 @@ export default function PriceCard({ item, loading, error }) {
               <h3 className="text-lg font-medium text-gray-900 group-hover:text-gray-700">
                 {item.name}
               </h3>
-              <p className="text-sm text-gray-500">per {item.unit}</p>
+              {item.unit && (
+                <p className="text-sm text-gray-500">per {item.unit}</p>
+              )}
             </div>
           </div>
           <div className="mt-4">
@@ -40,7 +42,8 @@ export default function PriceCard({ item, loading, error }) {
             ) : (
               <>
                 <p className="text-3xl font-bold text-gray-900">
-                  ${item.price?.toFixed(2)}
+                  {!item.cpi ? "$" : ""}
+                  {item.price?.toFixed(2)}
                 </p>
                 {item.priceChange !== null && (
                   <div className="mt-2 flex items-center">
