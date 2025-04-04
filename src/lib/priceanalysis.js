@@ -1,4 +1,3 @@
-import { BookTemplate } from "lucide-react";
 import { fetchItemHistory, fetchLatestItemData } from "./fetchUtils";
 import { cacheAnalysis, getCachedAnalysis } from "./llmcache";
 
