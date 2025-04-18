@@ -2,7 +2,8 @@
 
 Testing Change of the README.md file
 
-"Comparing Butler Review, GitHub Reviews, and Pull Requests"
+
+![Alt](https://repobeats.axiom.co/api/embed/df56ca63d6008b0548dd0962d333b25994d73746.svg "Repobeats analytics image")
 
 This website was made so that I can easily see what the price of certain goods are, and compare them to what they were in the past.
 
