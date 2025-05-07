@@ -2,6 +2,15 @@ import { fetchItemHistory, fetchLatestItemData } from "./fetchUtils";
 import { cacheAnalysis, getCachedAnalysis } from "./llmcache";
 
 function generatePrompt(nameOfGood, itemData, historyData, regions) {
+  // Extract the month and year from the itemData for consistent titling
+  let latestMonth = "Current";
+  let latestYear = "";
+  
+  if (itemData && itemData.periodName && itemData.year) {
+    latestMonth = itemData.periodName;
+    latestYear = itemData.year;
+  }
+
   const prompt = `You are a data analyst specializing in price analysis.
 
 
@@ -25,7 +34,7 @@ Note any significant correlations between price changes and external factors lik
 
 
 IMPORTANT: Format your response using proper Markdown syntax with the following guidelines:
-1. Use # for main heading (title)
+1. Use # for main heading (title) and ALWAYS start your analysis with "# ${nameOfGood} Price Analysis - ${latestMonth} ${latestYear}" exactly
 2. Use ## for section headings (e.g., "Trends", "Recent Events", "Key Factors")
 3. Use bullet points with * for lists
 4. Use **bold** for important facts and figures
