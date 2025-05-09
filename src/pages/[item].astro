@@ -53,6 +53,7 @@ const description = `The average price of ${itemInfo.name.toLowerCase()} in the 
 const response = await analyzeItemPrices(itemInfo);
 // console.log(response);
 const aiAnalysis = response.data ? marked.parse(response.data) : '';
+const analysisProvider = response.provider || 'AI';
 
 // Create JSON-LD structured data for the price dataset.
 const datasetStructuredData = {
@@ -135,6 +136,7 @@ const breadcrumbData = {
           currentPrices={itemData.currentPrices}
           historyData={itemData.history}
           aiAnalysis={aiAnalysis}
+          analysisProvider={analysisProvider}
           client:load
         />
       </div>

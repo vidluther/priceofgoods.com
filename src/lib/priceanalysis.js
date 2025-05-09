@@ -249,7 +249,11 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
     const cached = await getCachedAnalysis(item.dataKey);
     if (cached) {
       console.log(`Using cached analysis for ${item.name}`);
-      return cached;
+      // Ensure cached result has provider information
+      return {
+        ...cached,
+        provider: cached.provider || (cached.source === "anthropic" ? "Claude" : "Perplexity")
+      };
     }
   }
 
@@ -280,8 +284,8 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       // result contains { markdown, citations }
       analysis = result.markdown;
       citations = result.citations;
-      console.log(analysis);
-      console.log(citations);
+      // console.log(analysis);
+      // console.log(citations);
       // Cache the analysis if in development.
       if (import.meta.env.DEV) {
         await cacheAnalysis(
@@ -300,7 +304,12 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
     // console.log("Returning analysis", analysis);
     // console.log("Returning citations", citations);
     // Return the analysis result with the same structure as cachedAnalysis.
-    return { data: analysis, citations, timestamp };
+    return { 
+      data: analysis, 
+      citations, 
+      timestamp,
+      provider: useAnthropic ? "Claude" : "Perplexity" 
+    };
   } catch (error) {
     console.error(`Error analyzing prices for ${item.name}:`, error);
     // Return a default response instead of throwing, to prevent the page from failing to render
@@ -308,6 +317,7 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       data: `# ${item.name} Price Analysis\n\nPrice analysis data is currently unavailable. Please check back later.`,
       citations: [],
       timestamp: Date.now(),
+      provider: "None",
     };
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Bot } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis }) => {
+const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysisProvider }) => {
   const formatPrice = (price) => {
     return typeof price === "number" ? `$${price.toFixed(2)}` : "N/A";
   };
@@ -248,7 +248,9 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis }) => {
       {/* AI Market Analysis Section */}
       <div className="mt-8 bg-white rounded-lg shadow-lg p-6 border-t-4 border-blue-600">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-2xl bg-blue-100 p-2 rounded-full">🤖</span>
+          <span className="text-2xl bg-blue-100 p-2 rounded-full flex items-center justify-center">
+            <Bot size={24} className="text-blue-600" />
+          </span>
           <h2 className="text-2xl font-semibold text-blue-900">
             Market Analysis
           </h2>
@@ -280,6 +282,38 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis }) => {
             </p>
           )}
         </div>
+        {analysisProvider && (
+          <div className="mt-8 pt-4 border-t border-gray-100 bg-gray-50 rounded-b-lg -mx-6 -mb-6 px-6 py-3 flex items-center justify-end">
+            <span className="text-xs text-gray-400">Analysis powered by</span>
+            {analysisProvider === "Claude" ? (
+              <span className="ml-3 font-semibold text-purple-600 flex items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
+                  <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#8B5CF6"/>
+                  <path d="M12 8C9.79 8 8 9.79 8 12C8 14.21 9.79 16 12 16C14.21 16 16 14.21 16 12C16 9.79 14.21 8 12 8Z" fill="#8B5CF6"/>
+                </svg>
+                Claude
+              </span>
+            ) : analysisProvider === "Perplexity" ? (
+              <span className="ml-3 font-semibold text-teal-600 flex items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
+                  <path d="M21 7L12 2L3 7V17L12 22L21 17V7Z" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" fill="#0D9488"/>
+                  <path d="M12 22V16" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Perplexity
+              </span>
+            ) : (
+              <span className="ml-3 font-semibold text-blue-600 flex items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1.5">
+                  <path d="M9.5 3C4.8 3 1 6.8 1 11.5C1 16.2 4.8 20 9.5 20H14.5C19.2 20 23 16.2 23 11.5C23 6.8 19.2 3 14.5 3H9.5Z" stroke="#2563EB" strokeWidth="2"/>
+                  <circle cx="9.5" cy="11.5" r="2.5" fill="#2563EB"/>
+                  <circle cx="14.5" cy="11.5" r="2.5" fill="#2563EB"/>
+                </svg>
+                {analysisProvider}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
