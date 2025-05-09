@@ -167,7 +167,45 @@ async function fetchAnalysisWithAnthropic(prompt) {
       }
 
       // Combine all markdown parts into a single string
-      const markdown = markdownParts.join("");
+      let markdown = markdownParts.join('');
+
+      // Remove Claude's acknowledgment text that appears before the first heading
+      // This is a common pattern where Claude says things like "I'll analyze..." or "Let me search..."
+      const firstHeadingMatch = markdown.match(/(#\s+[\w\s\-\.,:;]+)/m);
+      if (firstHeadingMatch) {
+        const indexOfFirstHeading = markdown.indexOf(firstHeadingMatch[0]);
+        const textBeforeHeading = markdown.substring(0, indexOfFirstHeading);
+        
+        // Only remove text before heading if it looks like acknowledgment text
+        const acknowledgmentPhrases = [
+          "I'll analyze", "Let me search", "I will analyze", 
+          "analyzing", "let me look up", "I'll provide", 
+          "searching for", "researching", "I'll check", 
+          "let me gather", "I can provide", "let me find",
+          "I'll examine", "looking into", "searching current",
+          "let me use", "let's explore", "let me review",
+          "I need to", "I'm going to", "I will search",
+          "let me look for", "I'll research", "based on the data",
+          "here's my analysis", "now I'll", "first,"
+        ];
+        
+        // Also look for patterns like empty lines followed by "Let me search..." 
+        // which indicate an acknowledgment after Claude has already started responding
+        const hasNewLineAcknowledgment = /\n\n(Let me|I'll|Now I|To find)/i.test(textBeforeHeading);
+        
+        const hasAcknowledgment = acknowledgmentPhrases.some(phrase => 
+          textBeforeHeading.toLowerCase().includes(phrase.toLowerCase())) || 
+          hasNewLineAcknowledgment;
+          
+        if (hasAcknowledgment) {
+          // Debug log to show what content is being filtered out
+          console.log('Filtering acknowledgment text (first 100 chars):', 
+            textBeforeHeading.substring(0, 100).replace(/\n/g, '\\n') + 
+            (textBeforeHeading.length > 100 ? '...' : ''));
+          
+          markdown = markdown.substring(indexOfFirstHeading);
+        }
+      }
 
       // Validate markdown content
       if (!markdown || markdown.trim() === "") {
@@ -192,6 +230,11 @@ async function fetchAnalysisWithAnthropic(prompt) {
       console.log(
         `Anthropic response processed - Markdown length: ${markdown.length}, Citations: ${processedCitations.length}`,
       );
+      
+      // Log the first 100 chars of the processed markdown for debugging
+      console.log('First 100 chars of processed markdown:', 
+        markdown.substring(0, 100).replace(/\n/g, '\\n') + 
+        (markdown.length > 100 ? '...' : ''));
 
       // Return in the same format as Perplexity
       return { markdown, citations: processedCitations };
