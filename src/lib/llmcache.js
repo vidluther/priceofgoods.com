@@ -24,7 +24,7 @@ export async function getCachedAnalysis(itemKey) {
     }
 
     return {
-      data: cached.data,
+      data: cached.data || '',
       citations: cached.citations || [],
       timestamp: cached.timestamp,
     };
@@ -42,7 +42,7 @@ export async function getCachedAnalysis(itemKey) {
  * @param {string} prompt - The prompt used for analysis
  * @param {'anthropic'|'perplexity'} provider - The LLM provider used
  */
-export async function cacheAnalysis(itemKey, analysis, citations = [], prompt) {
+export async function cacheAnalysis(itemKey, analysis, citations = [], prompt, provider = 'anthropic') {
   // The cache version should match the version in getCachedAnalysis
   const CACHE_VERSION = 2;
   
@@ -51,6 +51,7 @@ export async function cacheAnalysis(itemKey, analysis, citations = [], prompt) {
     data: analysis,
     citations,
     prompt,
+    provider,
     version: CACHE_VERSION,
   };
 
@@ -59,7 +60,7 @@ export async function cacheAnalysis(itemKey, analysis, citations = [], prompt) {
     const filePath = path.join(CACHE_DIR, `${itemKey}.json`);
     await fs.writeFile(filePath, JSON.stringify(entry, null, 2));
     console.log(
-      `Successfully cached analysis for ${itemKey} with ${citations.length} citations (v${CACHE_VERSION})`,
+      `Successfully cached analysis for ${itemKey} with ${citations.length} citations using ${provider} (v${CACHE_VERSION})`,
     );
   } catch (error) {
     console.error("Error writing to cache:", error);
