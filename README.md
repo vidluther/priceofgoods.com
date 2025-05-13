@@ -14,9 +14,10 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 
 - Historical price charts for common goods
 - Categorized items (groceries, meats, produce, etc.)
-- Interactive visualizations
+- Interactive visualizations with Recharts
 - Data-backed inflation tracking
-- Mobile-friendly design
+- Mobile-friendly design with Tailwind CSS
+- LLM-powered price analysis using Anthropic Claude
 
 ## Roadmap
 
@@ -30,45 +31,46 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 
 ## Technology Stack
 
-1. [Astro](https://astro.build) - Web framework
+1. [Astro](https://astro.build) v5.7+ - Web framework
 2. React 19 - UI components
-3. TailwindCSS - Styling
+3. TailwindCSS v4 - Styling
 4. Recharts - Data visualization
 5. Cloudflare Pages - Web hosting
 6. Cloudflare Workers - Data fetching
 7. Cloudflare R2 - Data storage/caching
 8. Github - Source control
+9. Anthropic Claude - Price analysis via LangChain
 
 ## Development
 
 ### Prerequisites
 
 - Node.js (v18+)
-- npm
+- pnpm (v10+) - This project uses pnpm as its package manager
 
 ### Getting Started
 
 1. Clone the repository
 2. Install dependencies:
    ```
-   npm install
+   pnpm install
    ```
 3. Start the development server:
    ```
-   npm run dev
+   pnpm run dev
    ```
 4. Visit `http://localhost:3000` in your browser
 
 ### Build for Production
 
 ```
-npm run build
+pnpm run build
 ```
 
 ### Preview Production Build
 
 ```
-npm run preview
+pnpm run preview
 ```
 
 ## Architecture
@@ -79,6 +81,15 @@ The application uses a JAMstack approach with pre-fetched data to minimize API c
 2. The data is processed and stored in Cloudflare R2 storage
 3. The website retrieves this cached data rather than calling the BLS API directly
 4. The worker runs on a scheduled basis to keep data current
+5. LLM analysis of price trends is cached with version control to optimize costs
+
+### Project Structure
+
+- `src/pages/` - Astro page components and routing
+- `src/components/` - Reusable UI components (Astro and React)
+- `src/lib/` - Utility functions for data processing and analysis
+- `src/layouts/` - Layout components for consistent page structure
+- `src/styles/` - Global CSS and Tailwind configurations
 
 ## Contributing
 
