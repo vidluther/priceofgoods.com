@@ -7,10 +7,10 @@ import {
 
 const regions = {
   national: { name: "National Average", color: "#1e40af" },
-  // northeast: { name: "Northeast", color: "#0891b2" },
-  // midwest: { name: "Midwest", color: "#15803d" },
-  // south: { name: "South", color: "#b45309" },
-  // west: { name: "West", color: "#7c3aed" },
+  northeast: { name: "Northeast", color: "#0891b2" },
+  midwest: { name: "Midwest", color: "#15803d" },
+  south: { name: "South", color: "#b45309" },
+  west: { name: "West", color: "#7c3aed" },
 };
 
 export { regions };
