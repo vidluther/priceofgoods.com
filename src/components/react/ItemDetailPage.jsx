@@ -8,7 +8,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
+import { regions } from "../../lib/dataUtils";
+import CustomTooltip from "./CustomTooltip";
+import PriceHistoryChart from "./PriceHistoryChart";
 
 const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysisProvider }) => {
   const formatPrice = (price) => {
@@ -46,7 +50,7 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
       </div>
 
       {/* Price Change */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="flex items-center gap-2 mb-4">
         {getChangeIcon(currentPrices?.national?.percentChange)}
         <span
           className={`text-lg ${
@@ -57,6 +61,29 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
         >
           {formatChange(currentPrices?.national?.percentChange)}
         </span>
+      </div>
+      
+      {/* Regional Price Summary */}
+      <div className="flex flex-wrap items-center gap-4 mb-8 text-sm font-medium">
+        {Object.entries(regions).filter(([key]) => key !== 'national').map(([region, { name, color }]) => (
+          currentPrices?.[region]?.current ? (
+            <div key={region} className="flex items-center gap-1 bg-gray-50 py-1 px-3 rounded-full border border-gray-200">
+              <span className="mr-1 font-semibold">{name}:</span>
+              <span className="text-gray-900">{formatPrice(currentPrices[region].current)}</span>
+              {currentPrices[region].percentChange && (
+                <span 
+                  className={`ml-1 ${
+                    currentPrices[region].percentChange > 0
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {formatChange(currentPrices[region].percentChange)}
+                </span>
+              )}
+            </div>
+          ) : null
+        ))}
       </div>
 
       <div>
@@ -89,22 +116,27 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
                       domain={["auto", "auto"]}
                     />
                     <Tooltip
-                      formatter={(value) => [`$${value.toFixed(2)}`, "Price"]}
-                      labelFormatter={(label) => {
-                        const date = new Date(label + "-01");
-                        return date.toLocaleDateString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                        });
-                      }}
+                      content={<CustomTooltip />}
                     />
-                    <Line
-                      type="monotone"
-                      dataKey="national"
-                      stroke="#1e40af"
-                      dot={false}
-                      strokeWidth={2}
-                    />
+                    {Object.entries(regions).map(([key, { name, color }]) => {
+                      // Check if we have data for this region
+                      const hasData = historyData.some(entry => entry[key] > 0);
+                      if (hasData) {
+                        return (
+                          <Line
+                            key={key}
+                            type="monotone"
+                            dataKey={key}
+                            name={name}
+                            stroke={color}
+                            dot={false}
+                            strokeWidth={key === "national" ? 2 : 1.5}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                    <Legend />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -222,22 +254,27 @@ const ItemDetailPage = ({ item, currentPrices, historyData, aiAnalysis, analysis
                     domain={["auto", "auto"]}
                   />
                   <Tooltip
-                    formatter={(value) => [`$${value.toFixed(2)}`, "Price"]}
-                    labelFormatter={(label) => {
-                      const date = new Date(label + "-01");
-                      return date.toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                      });
-                    }}
+                    content={<CustomTooltip />}
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="national"
-                    stroke="#1e40af"
-                    dot={false}
-                    strokeWidth={2}
-                  />
+                  {Object.entries(regions).map(([key, { name, color }]) => {
+                    // Check if we have data for this region
+                    const hasData = historyData.some(entry => entry[key] > 0);
+                    if (hasData) {
+                      return (
+                        <Line
+                          key={key}
+                          type="monotone"
+                          dataKey={key}
+                          name={name}
+                          stroke={color}
+                          dot={false}
+                          strokeWidth={key === "national" ? 2 : 1.5}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+                  <Legend />
                 </LineChart>
               </ResponsiveContainer>
             </div>
