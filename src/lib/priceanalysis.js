@@ -34,7 +34,7 @@ Note any significant correlations between price changes and external factors lik
 
 
 IMPORTANT: Format your response using proper Markdown syntax with the following guidelines:
-1. Use # for main heading (title) and ALWAYS start your analysis with "# ${nameOfGood} Price Analysis - ${latestMonth} ${latestYear}" exactly
+1. Use # for main heading (title) and ALWAYS start your analysis with "# ${nameOfGood} Price Analysis -  ${latestMonth} ${latestYear}" exactly
 2. Use ## for section headings (e.g., "Trends", "Recent Events", "Key Factors")
 3. Use bullet points with * for lists
 4. Use **bold** for important facts and figures
@@ -112,7 +112,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
       // Call Anthropic API with web search enabled
       const response = await anthropic.messages.create(
         {
-          model: "claude-3-7-sonnet-20250219",
+          model: "claude-opus-4-20250514",
           max_tokens: 4000,
           temperature: 0.2,
           system:
@@ -167,7 +167,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
       }
 
       // Combine all markdown parts into a single string
-      let markdown = markdownParts.join('');
+      let markdown = markdownParts.join("");
 
       // Remove Claude's acknowledgment text that appears before the first heading
       // This is a common pattern where Claude says things like "I'll analyze..." or "Let me search..."
@@ -175,34 +175,56 @@ async function fetchAnalysisWithAnthropic(prompt) {
       if (firstHeadingMatch) {
         const indexOfFirstHeading = markdown.indexOf(firstHeadingMatch[0]);
         const textBeforeHeading = markdown.substring(0, indexOfFirstHeading);
-        
+
         // Only remove text before heading if it looks like acknowledgment text
         const acknowledgmentPhrases = [
-          "I'll analyze", "Let me search", "I will analyze", 
-          "analyzing", "let me look up", "I'll provide", 
-          "searching for", "researching", "I'll check", 
-          "let me gather", "I can provide", "let me find",
-          "I'll examine", "looking into", "searching current",
-          "let me use", "let's explore", "let me review",
-          "I need to", "I'm going to", "I will search",
-          "let me look for", "I'll research", "based on the data",
-          "here's my analysis", "now I'll", "first,"
+          "I'll analyze",
+          "Let me search",
+          "I will analyze",
+          "analyzing",
+          "let me look up",
+          "I'll provide",
+          "searching for",
+          "researching",
+          "I'll check",
+          "let me gather",
+          "I can provide",
+          "let me find",
+          "I'll examine",
+          "looking into",
+          "searching current",
+          "let me use",
+          "let's explore",
+          "let me review",
+          "I need to",
+          "I'm going to",
+          "I will search",
+          "let me look for",
+          "I'll research",
+          "based on the data",
+          "here's my analysis",
+          "now I'll",
+          "first,",
         ];
-        
-        // Also look for patterns like empty lines followed by "Let me search..." 
+
+        // Also look for patterns like empty lines followed by "Let me search..."
         // which indicate an acknowledgment after Claude has already started responding
-        const hasNewLineAcknowledgment = /\n\n(Let me|I'll|Now I|To find)/i.test(textBeforeHeading);
-        
-        const hasAcknowledgment = acknowledgmentPhrases.some(phrase => 
-          textBeforeHeading.toLowerCase().includes(phrase.toLowerCase())) || 
-          hasNewLineAcknowledgment;
-          
+        const hasNewLineAcknowledgment =
+          /\n\n(Let me|I'll|Now I|To find)/i.test(textBeforeHeading);
+
+        const hasAcknowledgment =
+          acknowledgmentPhrases.some((phrase) =>
+            textBeforeHeading.toLowerCase().includes(phrase.toLowerCase()),
+          ) || hasNewLineAcknowledgment;
+
         if (hasAcknowledgment) {
           // Debug log to show what content is being filtered out
-          console.log('Filtering acknowledgment text (first 100 chars):', 
-            textBeforeHeading.substring(0, 100).replace(/\n/g, '\\n') + 
-            (textBeforeHeading.length > 100 ? '...' : ''));
-          
+          console.log(
+            "Filtering acknowledgment text (first 100 chars):",
+            textBeforeHeading.substring(0, 100).replace(/\n/g, "\\n") +
+              (textBeforeHeading.length > 100 ? "..." : ""),
+          );
+
           markdown = markdown.substring(indexOfFirstHeading);
         }
       }
@@ -230,11 +252,13 @@ async function fetchAnalysisWithAnthropic(prompt) {
       console.log(
         `Anthropic response processed - Markdown length: ${markdown.length}, Citations: ${processedCitations.length}`,
       );
-      
+
       // Log the first 100 chars of the processed markdown for debugging
-      console.log('First 100 chars of processed markdown:', 
-        markdown.substring(0, 100).replace(/\n/g, '\\n') + 
-        (markdown.length > 100 ? '...' : ''));
+      console.log(
+        "First 100 chars of processed markdown:",
+        markdown.substring(0, 100).replace(/\n/g, "\\n") +
+          (markdown.length > 100 ? "..." : ""),
+      );
 
       // Return in the same format as Perplexity
       return { markdown, citations: processedCitations };
@@ -295,7 +319,9 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       // Ensure cached result has provider information
       return {
         ...cached,
-        provider: cached.provider || (cached.source === "anthropic" ? "Claude" : "Perplexity")
+        provider:
+          cached.provider ||
+          (cached.source === "anthropic" ? "Claude" : "Perplexity"),
       };
     }
   }
@@ -347,11 +373,11 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
     // console.log("Returning analysis", analysis);
     // console.log("Returning citations", citations);
     // Return the analysis result with the same structure as cachedAnalysis.
-    return { 
-      data: analysis, 
-      citations, 
+    return {
+      data: analysis,
+      citations,
       timestamp,
-      provider: useAnthropic ? "Claude" : "Perplexity" 
+      provider: useAnthropic ? "Claude" : "Perplexity",
     };
   } catch (error) {
     console.error(`Error analyzing prices for ${item.name}:`, error);
