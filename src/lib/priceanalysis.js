@@ -112,7 +112,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
       // Call Anthropic API with web search enabled
       const response = await anthropic.messages.create(
         {
-          model: "claude-opus-4-20250514",
+          model: "claude-sonnet-4-0",
           max_tokens: 4000,
           temperature: 0.2,
           system:
