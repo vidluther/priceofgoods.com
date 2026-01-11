@@ -28,10 +28,10 @@ importers:
         version: 3.4.1
       '@langchain/anthropic':
         specifier: ^0.3.12
-        version: 0.3.21(@langchain/core@0.3.57)
+        version: 0.3.21(@langchain/core@0.3.80)
       '@langchain/core':
-        specifier: ^0.3.36
-        version: 0.3.57
+        specifier: ^0.3.80
+        version: 0.3.80
       '@radix-ui/react-separator':
         specifier: ^1.1.1
         version: 1.1.7(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -724,8 +724,8 @@ packages:
     peerDependencies:
       '@langchain/core': '>=0.3.48 <0.4.0'
 
-  '@langchain/core@0.3.57':
-    resolution: {integrity: sha512-jz28qCTKJmi47b6jqhQ6vYRTG5jRpqhtPQjriRTB5wR8mgvzo6xKs0fG/kExS3ZvM79ytD1npBvgf8i19xOo9Q==}
+  '@langchain/core@0.3.80':
+    resolution: {integrity: sha512-vcJDV2vk1AlCwSh3aBm/urQ1ZrlXFFBocv11bz/NBUfLWD5/UDNMzwPdaAd2dKvNmTWa9FM2lirLU3+JCf4cRA==}
     engines: {node: '>=18'}
 
   '@markdoc/markdoc@0.5.2':
@@ -1470,6 +1470,9 @@ packages:
   console-table-printer@2.13.0:
     resolution: {integrity: sha512-Wl1rFO1NLonYBBjrdF2SMCnfNrKr8PPooPSnQBRX3LTJsnyGjBzLcwffo8wSKuJ0kr/rgC2Ltxb3Bpb072VA9w==}
 
+  console-table-printer@2.15.0:
+    resolution: {integrity: sha512-SrhBq4hYVjLCkBVOWaTzceJalvn5K1Zq5aQA6wXC/cYjI3frKWNPEMK3sZsJfNNQApvCQmgBcc13ZKmFj8qExw==}
+
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
@@ -1935,8 +1938,8 @@ packages:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
 
-  js-tiktoken@1.0.20:
-    resolution: {integrity: sha512-Xlaqhhs8VfCd6Sh7a1cFkZHQbYTLCwVJJWiHVxBYzLPxW0XsoxBy1hitmjkdIjD3Aon5BXLHFwU5O8WUx6HH+A==}
+  js-tiktoken@1.0.21:
+    resolution: {integrity: sha512-biOj/6M5qdgx5TKjDnFT1ymSpM5tbd3ylwDtrQvFQSu0Z7bBYko2dF+W/aUkXUPuk6IVpRxk/3Q2sHOzGlS36g==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -1977,6 +1980,23 @@ packages:
     peerDependencies:
       openai: '*'
     peerDependenciesMeta:
+      openai:
+        optional: true
+
+  langsmith@0.3.87:
+    resolution: {integrity: sha512-XXR1+9INH8YX96FKWc5tie0QixWz6tOqAsAKfcJyPkE0xPep+NDz0IQLR32q4bn10QK3LqD2HN6T3n6z1YLW7Q==}
+    peerDependencies:
+      '@opentelemetry/api': '*'
+      '@opentelemetry/exporter-trace-otlp-proto': '*'
+      '@opentelemetry/sdk-trace-base': '*'
+      openai: '*'
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@opentelemetry/exporter-trace-otlp-proto':
+        optional: true
+      '@opentelemetry/sdk-trace-base':
+        optional: true
       openai:
         optional: true
 
@@ -2575,6 +2595,9 @@ packages:
   simple-wcswidth@1.0.1:
     resolution: {integrity: sha512-xMO/8eNREtaROt7tJvWJqHBDTMFN4eiQ5I4JRMuilwfnFcV5W9u7RUkueNkdw0jPqGMX36iCywelS5yilTuOxg==}
 
+  simple-wcswidth@1.1.2:
+    resolution: {integrity: sha512-j7piyCjAeTDSjzTSQ7DokZtMNwNlEAyxqSZeCS+CXH7fJ4jx3FuJ/mTW3mE+6JLs4VJBbcll0Kjn+KXI5t21Iw==}
+
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
@@ -3114,6 +3137,11 @@ packages:
 
   zod-to-json-schema@3.25.0:
     resolution: {integrity: sha512-HvWtU2UG41LALjajJrML6uQejQhNJx+JBO9IflpSja4R03iNWfKXrj6W2h7ljuLyc1nKS+9yDyL/9tD1U/yBnQ==}
+    peerDependencies:
+      zod: ^3.25 || ^4
+
+  zod-to-json-schema@3.25.1:
+    resolution: {integrity: sha512-pM/SU9d3YAggzi6MtR4h7ruuQlqKtad8e9S0fmxcMi+ueAK5Korys/aWcV9LIIHTVbj01NdzxcnXSN+O74ZIVA==}
     peerDependencies:
       zod: ^3.25 || ^4
 
@@ -3717,31 +3745,34 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@langchain/anthropic@0.3.21(@langchain/core@0.3.57)':
+  '@langchain/anthropic@0.3.21(@langchain/core@0.3.80)':
     dependencies:
       '@anthropic-ai/sdk': 0.39.0
-      '@langchain/core': 0.3.57
+      '@langchain/core': 0.3.80
       fast-xml-parser: 4.5.3
       zod: 3.25.28
       zod-to-json-schema: 3.24.5(zod@3.25.28)
     transitivePeerDependencies:
       - encoding
 
-  '@langchain/core@0.3.57':
+  '@langchain/core@0.3.80':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
-      js-tiktoken: 1.0.20
-      langsmith: 0.3.29
+      js-tiktoken: 1.0.21
+      langsmith: 0.3.87
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
       uuid: 10.0.0
-      zod: 3.25.28
-      zod-to-json-schema: 3.24.5(zod@3.25.28)
+      zod: 3.25.76
+      zod-to-json-schema: 3.25.1(zod@3.25.76)
     transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - '@opentelemetry/exporter-trace-otlp-proto'
+      - '@opentelemetry/sdk-trace-base'
       - openai
 
   '@markdoc/markdoc@0.5.2(@types/react@19.1.5)(react@19.1.0)':
@@ -4493,6 +4524,10 @@ snapshots:
     dependencies:
       simple-wcswidth: 1.0.1
 
+  console-table-printer@2.15.0:
+    dependencies:
+      simple-wcswidth: 1.1.2
+
   convert-source-map@2.0.0: {}
 
   cookie-es@1.2.2: {}
@@ -5005,7 +5040,7 @@ snapshots:
 
   jiti@2.4.2: {}
 
-  js-tiktoken@1.0.20:
+  js-tiktoken@1.0.21:
     dependencies:
       base64-js: 1.5.1
 
@@ -5037,6 +5072,15 @@ snapshots:
       p-queue: 6.6.2
       p-retry: 4.6.2
       semver: 7.7.2
+      uuid: 10.0.0
+
+  langsmith@0.3.87:
+    dependencies:
+      '@types/uuid': 10.0.0
+      chalk: 4.1.2
+      console-table-printer: 2.15.0
+      p-queue: 6.6.2
+      semver: 7.7.3
       uuid: 10.0.0
 
   lightningcss-darwin-arm64@1.30.1:
@@ -5876,6 +5920,8 @@ snapshots:
 
   simple-wcswidth@1.0.1: {}
 
+  simple-wcswidth@1.1.2: {}
+
   sisteransi@1.0.5: {}
 
   sitemap@8.0.0:
@@ -6336,6 +6382,10 @@ snapshots:
       zod: 3.25.28
 
   zod-to-json-schema@3.25.0(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
+
+  zod-to-json-schema@3.25.1(zod@3.25.76):
     dependencies:
       zod: 3.25.76
 
