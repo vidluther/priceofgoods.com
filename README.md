@@ -55,11 +55,12 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
    ```
    pnpm install
    ```
-3. Start the development server:
+3. Be sure to set up your environment variables in `.env.local`
+4. Start the development server:
    ```
    pnpm run dev
    ```
-4. Visit `http://localhost:3000` in your browser
+5. Visit `http://localhost:3000` in your browser
 
 ### Build for Production
 
@@ -67,11 +68,7 @@ Data is sourced from the [Bureau of Labor Statistics](https://www.bls.gov/) (BLS
 pnpm run build
 ```
 
-### Preview Production Build
 
-```
-pnpm run preview
-```
 
 ## Architecture
 
