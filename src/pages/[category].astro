@@ -4,6 +4,7 @@ import PriceChart from '../components/react/PriceChart';
 import { fetchGoodsConfig } from '../lib/fetchUtils';
 import { slugify } from '../lib/stringUtilities';
 import CategoryRow from "../components/react/CategoryRow";
+import Breadcrumb from "../components/Breadcrumb.astro";
 // Generate all possible category routes
 export async function getStaticPaths() {
   const goodsConfig = await fetchGoodsConfig();
@@ -88,6 +89,13 @@ const breadcrumbData = {
   <script type="application/ld+json" set:html={JSON.stringify(datasetStructuredData)} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Breadcrumb
+      items={[
+        { name: "Home", href: "/" },
+        { name: categoryData.name, href: `/${slugify(categoryData.name)}` }
+      ]}
+    />
+
     <div class="text-center">
       <h1 class="text-3xl font-bold text-gray-900 sm:text-4xl">
         {categoryData.name}
