@@ -17,7 +17,8 @@ const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
 const title = `${categoryData.name} Average Monthly Prices in the US`;
-const description = `average price of ${categoryData.name.toLowerCase()} with monthly updates from US Bureau of Labor Statistics data. View trends and changes over time.`;
+const itemCount = Object.keys(categoryData.items).length;
+const description = `Track ${itemCount} ${categoryData.name.toLowerCase()} items with monthly US price updates from the Bureau of Labor Statistics. Compare prices and view historical trends.`;
 
 // Create Dataset structured data for the category
 const datasetStructuredData = {
