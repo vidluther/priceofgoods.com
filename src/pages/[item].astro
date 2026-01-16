@@ -8,6 +8,7 @@ import { processItemData, regions } from "../lib/dataUtils";
 import { slugify } from "../lib/stringUtilities";
 import { analyzeItemPrices } from "../lib/priceanalysis";
 import ItemDetailPage from "../components/react/ItemDetailPage";
+import Breadcrumb from "../components/Breadcrumb.astro";
 
 // Setup marked options
 marked.setOptions({
@@ -21,33 +22,30 @@ marked.setOptions({
 // Generate all possible item routes
 export async function getStaticPaths() {
     const goodsConfig = await fetchGoodsConfig();
-    const allItems = Object.values(goodsConfig.categories).reduce(
-        (items, category) => {
-            return {
-                ...items,
-                ...category.items,
-            };
-        },
-        {},
-    );
 
     const paths = await Promise.all(
-        Object.values(allItems).map(async (item) => {
-            const itemData = await processItemData(item.dataKey);
-            return {
-                params: { item: slugify(item.name) },
-                props: {
-                    itemInfo: item,
-                    itemData,
-                },
-            };
-        }),
+        Object.entries(goodsConfig.categories).flatMap(([categoryKey, category]) =>
+            Object.values(category.items).map(async (item) => {
+                const itemData = await processItemData(item.dataKey);
+                return {
+                    params: { item: slugify(item.name) },
+                    props: {
+                        itemInfo: item,
+                        itemData,
+                        categoryInfo: {
+                            name: category.name,
+                            slug: slugify(category.name)
+                        }
+                    },
+                };
+            })
+        )
     );
     return paths;
 }
 
 const { item } = Astro.params;
-const { itemInfo, itemData } = Astro.props;
+const { itemInfo, itemData, categoryInfo } = Astro.props;
 
 // Get the latest data date from history
 const latestDate =
@@ -135,6 +133,12 @@ const breadcrumbData = {
         {
             "@type": "ListItem",
             position: 2,
+            name: categoryInfo.name,
+            item: `https://priceofgoods.com/${categoryInfo.slug}`,
+        },
+        {
+            "@type": "ListItem",
+            position: 3,
             name: itemInfo.name,
             item: `https://priceofgoods.com/${slugify(itemInfo.name)}`,
         },
@@ -160,6 +164,14 @@ const breadcrumbData = {
         set:html={JSON.stringify(breadcrumbData)}
     />
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb
+            items={[
+                { name: "Home", href: "/" },
+                { name: categoryInfo.name, href: `/${categoryInfo.slug}` },
+                { name: itemInfo.name, href: `/${slugify(itemInfo.name)}` }
+            ]}
+        />
+
         <div class="flex flex-col md:flex-row md:gap-8">
             <!-- Left column: Item detail page component with analysis -->
             <div class="md:w-2/3">

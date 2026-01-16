@@ -1,0 +1,79 @@
+---
+export interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol
+    class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400"
+    itemscope
+    itemtype="https://schema.org/BreadcrumbList"
+  >
+    {
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        return (
+          <li
+            class="flex items-center"
+            itemprop="itemListElement"
+            itemscope
+            itemtype="https://schema.org/ListItem"
+          >
+            {!isLast ? (
+              <>
+                <a
+                  href={item.href}
+                  class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  itemprop="item"
+                >
+                  <span itemprop="name">{item.name}</span>
+                </a>
+                <meta itemprop="position" content={String(index + 1)} />
+                <svg
+                  class="w-4 h-4 mx-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </>
+            ) : (
+              <>
+                <span
+                  class="font-medium text-gray-900 dark:text-gray-100"
+                  itemprop="name"
+                  aria-current="page"
+                >
+                  {item.name}
+                </span>
+                <meta itemprop="position" content={String(index + 1)} />
+              </>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb-nav {
+    margin-bottom: 1.5rem;
+  }
+</style>
