@@ -2,10 +2,10 @@
 
 ## Build & Development Commands
 ```bash
-npm run dev      # Start local development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run astro    # Run Astro CLI commands
+pnpm run dev      # Start local development server
+pnpm run build    # Build for production
+pnpm run preview  # Preview production build
+pnpm run astro    # Run Astro CLI commands
 ```
 
 ## Code Style & Conventions
