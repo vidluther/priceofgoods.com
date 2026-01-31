@@ -11,7 +11,7 @@ export async function fetchGoodsConfig() {
     return data;
   } catch (error) {
     console.error("Error fetching goods configuration:", error);
-    throw new Error("Failed to fetch goods configuration");
+    throw new Error(error.message);
   }
 }
 
