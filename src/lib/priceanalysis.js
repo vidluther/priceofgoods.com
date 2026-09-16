@@ -49,34 +49,31 @@ Your final analysis should be well-structured, including proper headings, paragr
 
 async function fetchAnalysisWithPerplexity(prompt) {
   const perplexityKey = import.meta.env.PUBLIC_PERPLEXITY_API_KEY;
-  const perplexityResponse = await fetch(
-    "https://api.perplexity.ai/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${perplexityKey}`,
-      },
-      body: JSON.stringify({
-        model: "sonar-pro",
-        messages: [
-          {
-            role: "system",
-            content:
-              "Provide only the final answer. It is important that you do not include any explanation on the steps below.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        frequency_penalty: 1,
-        temperature: 0.2,
-        search_recency_filter: "month",
-        max_tokens: 1000,
-      }),
+  const perplexityResponse = await fetch("https://api.perplexity.ai/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${perplexityKey}`,
     },
-  );
+    body: JSON.stringify({
+      model: "sonar-pro",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Provide only the final answer. It is important that you do not include any explanation on the steps below.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      frequency_penalty: 1,
+      temperature: 0.2,
+      search_recency_filter: "month",
+      max_tokens: 1000,
+    }),
+  });
   const perplexityAnalysis = await perplexityResponse.json();
 
   const citations = perplexityAnalysis.citations;
@@ -112,9 +109,8 @@ async function fetchAnalysisWithAnthropic(prompt) {
       // Call Anthropic API with web search enabled
       const response = await anthropic.messages.create(
         {
-          model: "claude-sonnet-4-0",
+          model: "claude-opus-5",
           max_tokens: 4000,
-          temperature: 0.2,
           system:
             "Provide only the final answer. It is important that you do not include any explanation on the steps below.",
           messages: [
@@ -156,11 +152,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
         markdownParts.push(block.text || "");
 
         // Process citations if they exist
-        if (
-          block.citations &&
-          Array.isArray(block.citations) &&
-          block.citations.length > 0
-        ) {
+        if (block.citations && Array.isArray(block.citations) && block.citations.length > 0) {
           // Collect citations
           allCitations = [...allCitations, ...block.citations];
         }
@@ -209,8 +201,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
 
         // Also look for patterns like empty lines followed by "Let me search..."
         // which indicate an acknowledgment after Claude has already started responding
-        const hasNewLineAcknowledgment =
-          /\n\n(Let me|I'll|Now I|To find)/i.test(textBeforeHeading);
+        const hasNewLineAcknowledgment = /\n\n(Let me|I'll|Now I|To find)/i.test(textBeforeHeading);
 
         const hasAcknowledgment =
           acknowledgmentPhrases.some((phrase) =>
@@ -237,8 +228,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
       // Transform citations into the format expected by the application
       const processedCitations = allCitations.map((citation, index) => {
         // Validate citation structure
-        if (!citation)
-          return { id: index + 1, url: "", title: "Unknown source", text: "" };
+        if (!citation) return { id: index + 1, url: "", title: "Unknown source", text: "" };
 
         return {
           id: index + 1,
@@ -256,8 +246,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
       // Log the first 100 chars of the processed markdown for debugging
       console.log(
         "First 100 chars of processed markdown:",
-        markdown.substring(0, 100).replace(/\n/g, "\\n") +
-          (markdown.length > 100 ? "..." : ""),
+        markdown.substring(0, 100).replace(/\n/g, "\\n") + (markdown.length > 100 ? "..." : ""),
       );
 
       // Return in the same format as Perplexity
@@ -277,9 +266,7 @@ async function fetchAnalysisWithAnthropic(prompt) {
 }
 
 async function fetchAnalysis(prompt, useAnthropic = true) {
-  console.log(
-    `Using ${useAnthropic ? "Anthropic" : "Perplexity"} API for analysis`,
-  );
+  console.log(`Using ${useAnthropic ? "Anthropic" : "Perplexity"} API for analysis`);
 
   try {
     if (!prompt || typeof prompt !== "string" || prompt.trim() === "") {
@@ -319,9 +306,7 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       // Ensure cached result has provider information
       return {
         ...cached,
-        provider:
-          cached.provider ||
-          (cached.source === "anthropic" ? "Claude" : "Perplexity"),
+        provider: cached.provider || (cached.source === "anthropic" ? "Claude" : "Perplexity"),
       };
     }
   }
@@ -339,12 +324,7 @@ export async function analyzeItemPrices(item, useAnthropic = true) {
       // ),
     ]);
 
-    const prompt = generatePrompt(
-      item.name,
-      nationalData,
-      historyData,
-      regionalData,
-    );
+    const prompt = generatePrompt(item.name, nationalData, historyData, regionalData);
 
     let analysis;
     let citations;
