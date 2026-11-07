@@ -22,7 +22,7 @@
     "astro": "^5.17.1",
     "langsmith": "^0.6.0",
     "lucide-react": "^0.513.0",
-    "marked": "^15.0.6",
+    "marked": "^18.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "recharts": "^2.15.0",
